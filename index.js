@@ -2,8 +2,19 @@ import express from "express";
 import { styleText } from "util";
 import userRouter from "./routes/userRoutes.js";
 import tourRouter from "./routes/tourRoutes.js";
+import { config } from "dotenv";
+import mongoose from "mongoose";
+
 
 // import morgan from "morgan";
+
+config();
+
+const DB_URL = process.env.DATABASE.replace("<PASSWORD>", process.env.DATABASE_PASSWORD);
+
+mongoose.connect(DB_URL).then(()=>{
+	console.log("Connected To Database");
+});
 
 const app = express();
 const port = 3000;
@@ -15,6 +26,12 @@ app.use((req, res, next)=>{
 	// All the functionality is halted
 	next();
 });
+
+// Serve Static Files from a root folder
+// If no Route Specified, It will Serve at the Root Route i.e /
+// app.use(express.static(`./public`));
+// We will specify a Route by
+app.use("/public", express.static(`./public`));
 
 // External package for logging
 // app.use(morgan("dev"));
