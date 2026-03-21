@@ -21,7 +21,7 @@ const port = 3000;
 
 // Custom Logger middleware
 app.use((req, res, next)=>{
-	console.log(styleText(["bgBlue", "white"], " HTTP "), "New Request", req.url, Date.now());
+	console.log(styleText(["bgBlue", "white"], " HTTP "), "New Request", styleText("yellow", req.method.toUpperCase()), req.url);
 	// If we dont call the next function, function and the execution
 	// All the functionality is halted
 	next();

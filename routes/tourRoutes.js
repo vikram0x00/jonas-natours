@@ -10,7 +10,7 @@ tourRouter.param("id", checkId);
 tourRouter.get("/", getAllTours);
 tourRouter.get("/:id", getTour);
 tourRouter.post("/", checkBody, createTour);
-tourRouter.patch("/:id", updateTour);
+tourRouter.patch("/:id", checkBody, updateTour);
 tourRouter.delete("/:id", deleteTour);
 
 export default tourRouter;
