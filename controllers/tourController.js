@@ -1,8 +1,71 @@
 import Tours from "../models/Tours.js";
 
+export const aliasTopTours = (req, res, next)=>{
+	// req.query is not writable anymore in Express v5
+	// Use req.newField instead
+	// Is accessed by the next middleware handler
+	req.middlewareQuery = {};
+	req.middlewareQuery.limit = 5;
+	req.middlewareQuery.sort = "-ratingsAverage,price";
+	req.middlewareQuery.fields = "name,price,ratingsAverage,description,difficulty";
+	next();
+}
+
 export const getAllTours = async (req, res)=>{
 	try {
-		const json = await Tours.find();
+		console.log(req.query);
+		// [1A] Clone the Request Query Object
+		let queryObject = {...req.query}
+
+		// [1B] Remove the excluded fields
+		const excluded = ["limit", "fields", "sort", "page"];
+		excluded.forEach(e => delete queryObject[e]);
+		
+		// [2] Convert Operators to MongoDB compatible operators
+		// Regex
+		let queryString = JSON.stringify(queryObject);
+		queryString = queryString.replace(/\b(gte|lte|gt|lt)\b/g, (match)=> `$${match}`);
+		queryString = JSON.parse(queryString);
+		console.log(queryString);
+		
+		// Non-awaited Mongo Query
+		let query = Tours.find(queryString);
+
+		// [3] Sorting
+		if(req.query.sort){
+			// This method takes a string which is a field in the defined schema
+			// Multiple Fields can be specified by a space and then a minus for descending
+			// Ascending is by default and a plus would also do that
+			const sortBy = req.query.sort.split(",").join(" ");
+			query = query.sort(sortBy);
+		}
+		else {
+			query = query.sort("-createdAt");
+		}
+		// [4] Field Limiting 
+		if(req.query.fields){
+			const fields = req.query.fields.split(",").join(" ");
+			// This method takes fields in the defined Schema as a string seperated by spaces
+			query = query.select(fields);
+		}
+		// -fieldName for excluding the field out of the query result
+		else{
+			query = query.select("-__v");
+		}
+		// [5] Pagination
+		const page = Number(req.query.page) || 1;
+		const limit = Number(req.query.limit) || 100;
+		const skip = (page - 1) * limit;
+		if(req.query.page){
+			const numTours = await Tours.countDocuments();
+			if(skip >= numTours){
+				throw new Error("This page does not exist");
+			}
+		}
+		query = query.skip(skip).limit(limit);
+		// Await the query and get the Results
+		const json = await query;
+
 		res.status(200).json({
 			status: "success",
 			results: json.length,
@@ -11,7 +74,7 @@ export const getAllTours = async (req, res)=>{
 	} catch (error) {
 		res.status(404).json({
 			status: "failed",
-			message: error
+			message: error.message
 		});	
 	}
 }
@@ -88,12 +151,6 @@ export const deleteTour = async (req, res)=>{
 }
 
 export const checkId = (req, res, next, value)=>{
-	// if(tourId > json.length){
-	// 	return res.status(404).json({
-	// 		status: "error",
-	// 		message: "Tour with the id " + tourId + " not found"
-	// 	});
-	// }
 	next();
 }
 

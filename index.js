@@ -33,6 +33,9 @@ app.use((req, res, next)=>{
 // We will specify a Route by
 app.use("/public", express.static(`./public`));
 
+// For Extended Request Query parsing
+app.set("query parser", "extended");
+
 // External package for logging
 // app.use(morgan("dev"));
 
