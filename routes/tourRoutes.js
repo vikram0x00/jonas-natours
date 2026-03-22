@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { checkId, checkBody, aliasTopTours, getAllTours, getTour, createTour, updateTour, deleteTour } from "../controllers/tourController.js";
+import { checkId, checkBody, getTourStats, aliasTopTours, getAllTours, getTour, createTour, updateTour, deleteTour, getMonthlyPlan } from "../controllers/tourController.js";
 
 const tourRouter = Router();
 
@@ -8,7 +8,9 @@ const tourRouter = Router();
 tourRouter.param("id", checkId);
 
 tourRouter.get("/", getAllTours);
-tourRouter.get("/top-5-tours", aliasTopTours, getAllTours);
+tourRouter.get("/top-5-tours", aliasTopTours);
+tourRouter.get("/tour-stats", getTourStats);
+tourRouter.get("/monthly-plan/:year", getMonthlyPlan);
 tourRouter.get("/:id", getTour);
 tourRouter.post("/", checkBody, createTour);
 tourRouter.patch("/:id", checkBody, updateTour);

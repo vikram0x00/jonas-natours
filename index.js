@@ -61,6 +61,21 @@ app.use("/api/v1/users", userRouter);
 // app.route("/api/v1/tours/").get(getAllTours).post(createTour);
 // app.route("/api/v1/tours/:id").get(getTour).patch(updateTour).delete(deleteTour);
 
+/**
+ * The Old Express Method app.all with * does not work anymore
+ * Because Express moved on to a stricter version of path-to-regexp
+ * This has to be placed in the last because the order of the routes defined 
+ * is the order they are processed in and checked for
+ * This is the last function and it is understood that there are no other routes which match the requested URL
+ * Send out a Status 404 and a failed message
+ */
+app.use((req, res)=>{
+	res.status(404).json({
+		status: "failed",
+		message: `Cannot find ${req.url} on this server`
+	});
+});	
+
 app.listen(port, ()=>{
 	console.log("Natours running on port http://localhost:3000/");
 });

@@ -1,14 +1,98 @@
 import Tours from "../models/Tours.js";
 
-export const aliasTopTours = (req, res, next)=>{
-	// req.query is not writable anymore in Express v5
-	// Use req.newField instead
-	// Is accessed by the next middleware handler
-	req.middlewareQuery = {};
-	req.middlewareQuery.limit = 5;
-	req.middlewareQuery.sort = "-ratingsAverage,price";
-	req.middlewareQuery.fields = "name,price,ratingsAverage,description,difficulty";
-	next();
+export const aliasTopTours = async (req, res)=>{
+	try {
+		const json = await Tours.find().sort("price -ratingsAverage").select("name description price ratingsAverage difficulty").limit(5);
+		res.status(200).json({
+			status: "success",
+			results: json.length,
+			data: { json }
+		});
+	} catch (error) {
+		res.status(404).json({
+			status: "failed",
+			message: error
+		});
+	}
+}
+
+export const getMonthlyPlan = async (req, res)=>{
+	try {
+		const year = Number(req.params.year);
+		const plan = await Tours.aggregate([
+			{
+				$unwind: "$startDates"
+			},
+			{
+				$match: { 
+					startDates: {
+						$gte: new Date(`${year}-01-01`),
+						$lte: new Date(`${year}-12-31`)
+					}
+				}
+			},
+			{
+				$group: {
+					_id: { $month: "$startDates" },
+					numTourStarts: { $sum: 1 },
+					tours: { $push: "$name" }
+				}
+			},
+			{
+				$addFields: { month: "$_id" }
+			},
+			{
+				$project: {
+					_id: 0
+				}
+			},
+			{
+				$sort: { numTourStarts: -1 }
+			},
+			{
+				$limit: 12
+			}
+		]);
+		res.status(200).json({
+			status: "success",
+			data: { plan }
+		});
+	} catch (error) {
+		res.status(400).json({
+			status: "failed",
+			message: error
+		})
+	}
+}
+
+export const getTourStats = async (req, res)=>{
+	try {
+		const stats = await Tours.aggregate([
+			{
+				$match: { ratingsAverage: { $gte: 4.5 } }
+			},
+			{
+				$group: { 
+					_id: "$difficulty",
+					numTours: { $sum: 1 },
+					numRatings: { $sum: "$ratingsQuantity" },
+					avgRating: { $avg: "$ratingsAverage" },
+					avgPrice: { $avg: "$price" },
+					minPrice: { $min: "$price" },
+					maxPrice: { $max: "$price" }
+				}
+			}
+		]);
+		res.status(200).json({
+			status: "success",
+			data: { stats }
+		});
+	} catch (error) {
+		res.status(404).json({
+			status: "failed",
+			message: error
+		});
+	}
 }
 
 export const getAllTours = async (req, res)=>{
@@ -50,7 +134,7 @@ export const getAllTours = async (req, res)=>{
 		}
 		// -fieldName for excluding the field out of the query result
 		else{
-			query = query.select("-__v");
+			query = query.select("-__v -_id");
 		}
 		// [5] Pagination
 		const page = Number(req.query.page) || 1;
