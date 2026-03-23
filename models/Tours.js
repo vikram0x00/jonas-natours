@@ -106,12 +106,12 @@ tourSchema.pre(/^find/, function(next){
 	// this keyword can be chained with methods for more querying operations
 	// De-select secret tours
 	this.find({ secretTour: { $ne: true } });
-	next();
+	// REMINDER: DO NOT USE NEXT HERE
 });
 
 tourSchema.pre("aggregate", function(next){
 	this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
-	next();
+	// REMINDER: DO NOT USE NEXT HERE
 });
 
 // Storing properties like duration in weeks in a Database is inefficient

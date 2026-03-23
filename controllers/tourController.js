@@ -1,4 +1,12 @@
 import Tours from "../models/Tours.js";
+import AppError from "../appError.js";
+
+/**
+ * Express v5 - Automatic Sync and Async Error Handling
+ * Any Errors in the Route Handlers are thrown into the Central error handler
+ * No need to use Try Catch Everywhere
+ * Just use next(error); for custom Error cases
+ */
 
 export const aliasTopTours = async (req, res)=>{
 	try {
@@ -134,7 +142,7 @@ export const getAllTours = async (req, res)=>{
 		}
 		// -fieldName for excluding the field out of the query result
 		else{
-			query = query.select("-__v -_id");
+			query = query.select("-__v -secretTour");
 		}
 		// [5] Pagination
 		const page = Number(req.query.page) || 1;
@@ -180,10 +188,13 @@ export const createTour = async (req, res)=>{
 	}
 }
 
-export const getTour = async (req, res)=>{
+export const getTour = async (req, res, next)=>{
 	try {
 		const tourId = req.params.id;
 		const tour = await Tours.findById(tourId);
+		if(!tour){
+			return next(new AppError("Tour Not Found with that ID", 404));
+		}
 		res.status(200).json({
 			status: "success",
 			data: {

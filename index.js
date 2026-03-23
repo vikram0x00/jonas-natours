@@ -4,7 +4,8 @@ import userRouter from "./routes/userRoutes.js";
 import tourRouter from "./routes/tourRoutes.js";
 import { config } from "dotenv";
 import mongoose from "mongoose";
-
+import AppError from "./appError.js";
+import { errorHandler } from "./controllers/errorController.js";
 
 // import morgan from "morgan";
 
@@ -69,12 +70,17 @@ app.use("/api/v1/users", userRouter);
  * This is the last function and it is understood that there are no other routes which match the requested URL
  * Send out a Status 404 and a failed message
  */
-app.use((req, res)=>{
-	res.status(404).json({
-		status: "failed",
-		message: `Cannot find ${req.url} on this server`
-	});
-});	
+app.use((req, res, next)=>{
+	next(new AppError(`Can't find https://${req.hostname}:3000${req.url} on this Server`, 404));
+});
+
+// Central Error Handler Middleware
+/**
+ * Takes Params Error, req, res, next
+ * In any route or middleware, (handler) calling next() and supplying the error object to it 
+ * The Error object ends up in this Central error handler function which we can handle and send some response back to the client
+ */
+app.use(errorHandler);
 
 app.listen(port, ()=>{
 	console.log("Natours running on port http://localhost:3000/");
