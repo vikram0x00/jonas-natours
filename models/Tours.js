@@ -94,7 +94,6 @@ const tourSchema = new Schema({
 // This runs before the document is saved and this keyword provides access to the document
 tourSchema.pre("save", function(next){
 	this.slug = slugify(this.name);
-	next();
 });
 
 // Query Middleware
