@@ -5,8 +5,6 @@ export const errorHandler = (err, req, res, next)=>{
 	err.statusCode = err.statusCode || 500;
 	err.status = err.status || "Error";
 	if(process.env.NODE_ENV === "development"){
-		// REMOVE THIS LINE
-		console.log(err);
 		// Handle Cast Error
 		if(err.name === "CastError"){
 			const errorObject = {
@@ -36,6 +34,24 @@ export const errorHandler = (err, req, res, next)=>{
 				return res.status(400).json(Object.assign({ status: "failed" }, errorObject));
 			}
 		}
+		// Handle Validation Error for all fields
+		if(err.name === "ValidationError"){
+			let iDf = Object.entries(err.errors);
+			iDf = iDf.map(e => {
+				return {
+					field: e[0],
+					message: e[1].message,
+					invalidValue: e[1].value
+				}
+			});
+			const errorObject = {
+				name: "ValidationError",
+				message: err.message,
+				invalidDataFields: iDf,
+				stack: err.stack
+			}
+			return res.status(400).json(Object.assign({ status: "failed" }, errorObject));
+		}
 		// Common Dev Error Response 
 		res.status(err.statusCode).json({
 			status: err.status,
@@ -59,15 +75,33 @@ export const errorHandler = (err, req, res, next)=>{
 			});
 		}
 		// Handle Duplicate Tour Name
-		if(err.errorResponse.code === 11000){
-			const errorObject = {
-				duplicateField: Object.keys(err.keyValue)[0],
-				duplicateValue: Object.values(err.keyValue)[0]
+		if(err.errorResponse){
+			if (err.errorResponse.code === 11000) {
+				const errorObject = {
+					duplicateField: Object.keys(err.keyValue)[0],
+					duplicateValue: Object.values(err.keyValue)[0]
+				}
+				return res.status(400).json({
+					status: "failed",
+					message: `Duplicate Value entered for ${errorObject.duplicateField}: ${errorObject.duplicateValue}`
+				});
 			}
-			return res.status(400).json({
-				status: "failed",
-				message: `Duplicate Value entered for ${errorObject.duplicateField}: ${errorObject.duplicateValue}`
+		}
+		// Handle Validation Errors
+		if(err.name === "ValidationError"){
+			let iDf = Object.entries(err.errors);
+			iDf = iDf.map(e => {
+				return {
+					field: e[0],
+					message: e[1].message,
+					invalidValue: e[1].value
+				}
 			});
+			iDf = iDf.map(e => `Invalid Value Sent for ${e.field}: ${e.invalidValue}; Message: ${e.message}`);
+			const errorObject = {
+				errors: iDf
+			}
+			return res.status(400).json(Object.assign({ status: "failed" }, errorObject));
 		}
 		else{
 			console.log(err);

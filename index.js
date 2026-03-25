@@ -17,6 +17,15 @@ mongoose.connect(DB_URL).then(()=>{
 	console.log("Connected To Database");
 });
 
+// Handle all Synchronous Code Errors
+// This function needs to be at the top of the code
+// Put it above the app declaration to handle all the sync code errors
+process.on("uncaughtException", (error)=>{
+	console.log("Uncaught Exception: ", error.name, error.message, error.stack);
+	console.log("Shutting down the server...");
+	process.exit(1);
+});
+
 const app = express();
 const port = 3000;
 
@@ -82,6 +91,21 @@ app.use((req, res, next)=>{
  */
 app.use(errorHandler);
 
-app.listen(port, ()=>{
+// This function returns a Server object
+const server = app.listen(port, ()=>{
 	console.log("Natours running on port http://localhost:3000/");
+});
+
+// Handle All Unhandled Promise Rejections
+// This is an Project Central way of handling any unhandled / uncaught promise
+// which throws an error and the Process exits
+
+process.on("unhandledRejection", (error)=>{
+	console.log("Unhandled Rejection:", error.name, error.message);
+	console.log("Shutting down the server...");
+	// This function waits until all the current requests are processed
+	// and then kills the node process
+	server.close(()=>{
+		process.exit(1);
+	});
 });
