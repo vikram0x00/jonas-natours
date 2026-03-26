@@ -1,5 +1,10 @@
 import { Schema, model } from "mongoose";
 import validator from "validator";
+import bcrypt from "bcrypt";
+
+// Validators format
+// validate: { validator: function(value), message: errorMessage }
+// validate: [function, message]
 
 const userSchema = new Schema({
 	name: {
@@ -12,7 +17,7 @@ const userSchema = new Schema({
 		required: [true, "A User must have an email"],
 		unique: true,
 		lowercase: true,
-		validator: [validator.isEmail, "Please Enter a valid Email Address"]
+		validate: [validator.isEmail, "Please Enter a valid Email Address"]
 	},
 	photo: String,
 	password: {
@@ -22,8 +27,21 @@ const userSchema = new Schema({
 	},
 	passwordConfirm: {
 		type: String,
-		required: true
+		validate: {
+			validator: function(value){
+				return this.password === value;
+			},
+			message: "Both Password and Confirm Password should match"
+		}
 	}
+});
+
+userSchema.pre("save", async function(next){
+	if(!this.isModified("password")){
+		return next();
+	}
+	this.password = await bcrypt.hash(this.password, 10); 
+	this.passwordConfirm = undefined;
 });
 
 export default model("Users", userSchema);
