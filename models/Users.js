@@ -33,7 +33,13 @@ const userSchema = new Schema({
 			},
 			message: "Both Password and Confirm Password should match"
 		}
-	}
+	},
+	role: {
+		type: String,
+		enum: ["user", "guide", "lead-guide", "admin"],
+		default: "user"
+	},
+	passwordChangedAt: Date
 });
 
 userSchema.pre("save", async function(next){

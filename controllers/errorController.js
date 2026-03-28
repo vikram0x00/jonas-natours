@@ -1,7 +1,6 @@
 export const errorHandler = (err, req, res, next)=>{
 	// err - Better if it is an Error() constructor and throw
 	// I do not prefer to modulify literally everything. Half Clean Code IS okay
-
 	err.statusCode = err.statusCode || 500;
 	err.status = err.status || "Error";
 	if(process.env.NODE_ENV === "development"){
@@ -51,6 +50,25 @@ export const errorHandler = (err, req, res, next)=>{
 				stack: err.stack
 			}
 			return res.status(400).json(Object.assign({ status: "failed" }, errorObject));
+		}
+		// Handle Invalid JWT Error
+		if(err.name === "JsonWebTokenError"){
+			return res.status(401).json({
+				status: "failed",
+				name: "JsonWebTokenError",
+				detailedMsg: "Invalid JWT Token with manipulated signature sent or none algorithm",
+				message: err.message,
+				stack: err.stack
+			});
+		}
+		if(err.name === "TokenExpiredError"){
+			return res.status(401).json({
+				status: "failed",
+				name: "TokenExpiredError",
+				detailedMsg: "Expired JWT Token Sent",
+				message: err.message,
+				stack: err.stack
+			});
 		}
 		// Common Dev Error Response 
 		res.status(err.statusCode).json({
@@ -102,6 +120,19 @@ export const errorHandler = (err, req, res, next)=>{
 				errors: iDf
 			}
 			return res.status(400).json(Object.assign({ status: "failed" }, errorObject));
+		}
+		// Handle JWT Errors
+		if(err.name === "JsonWebTokenError"){
+			return res.status(401).json({
+				status: "failed",
+				message: "Invalid Authorization Credentials Sent"
+			});
+		}
+		if(err.name === "TokenExpiredError"){
+			return res.status(401).json({
+				status: "failed",
+				message: "Authorization Token Expired"
+			});
 		}
 		else{
 			console.log(err);

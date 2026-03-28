@@ -33,7 +33,7 @@ export const login = async (req, res, next)=>{
 		return next(new AppError("Invalid Email or Password Sent", 400));
 	}
 	// Check if a valid user with that email exists
-	const user = await Users.findOne({ email }).select("+password");
+	const user = await Users.findOne({ email }).select("password");
 	if(!user){
 		return next(new AppError("No account found with that email", 404));
 	}
@@ -52,4 +52,55 @@ export const login = async (req, res, next)=>{
 		status: "success",
 		token
 	});
+}
+
+export const protect = async (req, res, next)=>{
+	// (1) Getting Token
+	let token;
+	if(req.headers.authorization && req.headers.authorization.startsWith("Bearer")){
+		token = req.headers.authorization.split(" ")[1];
+	}
+	if(!token){
+		return next(new AppError("Unauthorized. Please Log In", 401));
+	}
+	// (2) Verifying Token
+	const data = jwt.verify(token, process.env.JWT_SECRET);
+	/**
+	 * There are few errors thrown if the data cannot be decoded or verified
+	 * JsonWebTokenError - Algorithm set to none or manipulated signature
+	 * TokenExpiredError - If the JWT Token has expired, technically similar to logout
+	 */
+	// (3) Check if user exists in DB
+	const user = await Users.findById(data.id);
+	if(!user){
+		return next(new AppError("This user does not exist", 401));
+	}
+	// (4) Check if user changed password after the token was issued
+	if(user.passwordChangedAt){
+		const jwtIssuedAt = data.iat * 1000;
+		const passChangeAt = new Date(user.passwordChangedAt).getTime();
+		if(passChangeAt > jwtIssuedAt){
+			return next(new AppError("You have changed your password. Log In Again", 401));
+		}
+	}
+	// If all the above challenges pass, the route will allow the access to the protected route
+	req.user = {
+		// _id returns ObjectId and id returns string
+		id: user.id,
+		name: user.name,
+		email: user.email,
+		passwordChangedAt: user.passwordChangedAt || null,
+		role: user.role || "user"
+	}
+	next();
+}
+
+export const restrictTo = (...roles)=>{
+	// The above spread operator returns an array roles[]
+	return (req, res, next)=>{
+		if(!roles.includes(req.user.role)){
+			return next(new AppError("You are not authorized to perform this action", 403));
+		}
+		next();
+	}
 }
