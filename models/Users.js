@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { Schema, model } from "mongoose";
 import validator from "validator";
 import bcrypt from "bcrypt";
@@ -25,29 +26,24 @@ const userSchema = new Schema({
 		required: [true, "A User must provide a password"],
 		minlength: [8, "Please Enter atleast 8 characters"]
 	},
-	passwordConfirm: {
-		type: String,
-		validate: {
-			validator: function(value){
-				return this.password === value;
-			},
-			message: "Both Password and Confirm Password should match"
-		}
-	},
+	// Useless Field
+	// passwordConfirm: {
+	// 	type: String,
+	// 	validate: {
+	// 		validator: function(value){
+	// 			return this.password === value;
+	// 		},
+	// 		message: "Both Password and Confirm Password should match"
+	// 	}
+	// },
 	role: {
 		type: String,
 		enum: ["user", "guide", "lead-guide", "admin"],
 		default: "user"
 	},
-	passwordChangedAt: Date
-});
-
-userSchema.pre("save", async function(next){
-	if(!this.isModified("password")){
-		return next();
-	}
-	this.password = await bcrypt.hash(this.password, 10); 
-	this.passwordConfirm = undefined;
+	passwordChangedAt: Date,
+	passwordResetToken: String,
+	passwordResetExpires: String
 });
 
 export default model("Users", userSchema);

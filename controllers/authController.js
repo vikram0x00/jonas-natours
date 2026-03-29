@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken";
 import { config } from "dotenv";
 import AppError from "../appError.js";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
+import sendEmail from "../sendEmail.js";
 
 config();
 
@@ -15,8 +17,9 @@ const signJWTToken = (id) =>{
 }
 
 export const signUp = async (req, res, next)=>{
-	const { name, password, email, passwordConfirm } = req.body;
-	const newUser = await Users.create({ name, email, password, passwordConfirm });
+	const { name, password, email } = req.body;
+	const hashedPass = await bcrypt.hash(password, 10);
+	const newUser = await Users.create({ name, email, password: hashedPass });
 	const token = signJWTToken(newUser._id);
 
 	res.status(201).json({
@@ -103,4 +106,77 @@ export const restrictTo = (...roles)=>{
 		}
 		next();
 	}
+}
+
+export const forgotPassword = async (req, res, next)=>{
+	// (1) Get User from the email in the re.body
+	if(!req.body.email){
+		return next(new AppError("No Email Provided", 401));
+	}
+	const user = await Users.findOne({ email: req.body.email });
+	// Just send a dummy response for both user found and not found cases
+	// User not found, return dummy response. This is to avoid building of checkers for our API
+	if(!user){
+		return res.status(200).json({
+			status: "success",
+			message: "An Email containing the password reset URL has been sent to your mail address if it exists on the server. Make sure to check your Inbox and the Spam folder"
+		});	
+	}
+	// (2) Generate random reset token
+	const resetToken = crypto.randomBytes(32).toString("hex");
+	const passObj = {
+		passwordResetToken: crypto.createHash("sha256").update(resetToken).digest("hex"),
+		passwordResetExpires: Date.now() + (10 * 60 * 1000)
+	}
+	await Users.findByIdAndUpdate(user.id, passObj);
+	// (3) Send it to the users email
+	const resetUrl = `${req.protocol}://${req.host}/api/v1/users/resetPassword/${resetToken}`;
+	await sendEmail({
+		email: req.body.email,
+		subject: "Password Reset Request for " + req.body.email,
+		text: "There was a Password Reset Request for your account. Click the below link to reset your password. This link is valid for the next 10 minutes\n\n" + resetUrl + "\n\nNot you? Ignore this email"
+	});
+	await res.status(200).json({
+		status: "success",
+		message: "An Email containing the password reset URL has been sent to your mail address if it exists on the server. Make sure to check your Inbox and the Spam folder"
+	});
+}
+
+export const resetPassword = async (req, res, next)=>{
+	// (1) Get user based on token
+	const token = req.params.token;
+	const password = req.body.password;
+	if(!token){
+		return next(new AppError("No Reset Token Found", 401));
+	}
+	if(!password || password.length < 8){
+		return next(new AppError("No password found or password length is too short", 400));
+	}
+	const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+	const user = await Users.findOne({ passwordResetToken: hashedToken, passwordResetExpires: { $gte: Date.now() } });
+	// (2) If Token has not expired and the user exists, set the new password
+	if(!user){
+		return next(new AppError("Token has expired or is invalid", 400));
+	}
+	// (3) Update changedPasswordAt
+	const updatedDetails = {
+		password: await bcrypt.hash(password, 10),
+		// Minus a second for the database latency
+		passwordChangedAt: Date.now() - 1000,
+		$unset: { 
+			passwordResetToken: 1,
+			passwordResetExpires: 1
+		}
+	}
+	await Users.findByIdAndUpdate(user.id, updatedDetails, {
+		runValidators: true
+	});
+	// (4) Log User In Again
+	// IMPORTANT: use _id for JWT and id for normal operations
+	const jwtToken = signJWTToken(user._id);
+	res.status(201).json({
+		status: "success",
+		message: "Your Password has been successfully reset",
+		token: jwtToken
+	});
 }
