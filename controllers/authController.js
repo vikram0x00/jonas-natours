@@ -51,6 +51,10 @@ export const login = async (req, res, next)=>{
 		return next(new AppError("The Email or the Password is incorrect", 401));
 	}
 	const token = signJWTToken(user._id);
+	// Unsecured HTTP Token, do not use in Production environments without HTTPS
+	res.cookie("jwt", token, {
+		expires: Date.now() + 2592000000
+	});
 	res.status(200).json({
 		status: "success",
 		token
@@ -177,6 +181,40 @@ export const resetPassword = async (req, res, next)=>{
 	res.status(201).json({
 		status: "success",
 		message: "Your Password has been successfully reset",
+		token: jwtToken
+	});
+}
+
+export const updatePassword = async (req, res, next)=>{
+	// (1) Get user from Database via previous Middleware data
+	const user = await Users.findOne({ _id: req.user.id });
+	if(!user){
+		return next(new AppError("This user does not exist", 401));
+	}
+	if(!req.body.password || !req.body.newPassword){
+		return next(new AppError("Password or New Password missing", 401));
+	}
+	if(req.body.newPassword.length < 8){
+		return next(new AppError("Password or New Password missing", 401));
+	}
+	if(req.body.password === req.body.newPassword){
+		return next(new AppError("Enter a different password than the original old password", 400));
+	}
+	// (2) Check if the password matches the real password
+	const passMatched = await bcrypt.compare(req.body.password, user.password);
+	if(!passMatched){
+		return next(new AppError("The Password you sent and the password you have set for your account do not match. If you have forgotten your original password, try resetting it.", 400));
+	}
+	// (3) If it is, change password, else throw error
+	await Users.findByIdAndUpdate(user.id, {
+		password: await bcrypt.hash(req.body.newPassword, 10),
+		passwordChangedAt: Date.now() - 1000
+	});
+	// (4) Regen JWT Token, send it to the client
+	const jwtToken = signJWTToken(user._id);
+	res.status(200).json({
+		status: "success",
+		message: "Password Updated Successfully",
 		token: jwtToken
 	});
 }

@@ -6,7 +6,12 @@ import { config } from "dotenv";
 import mongoose from "mongoose";
 import AppError from "./appError.js";
 import { errorHandler } from "./controllers/errorController.js";
+import rateLimit from "express-rate-limit";
+import helmet from "helmet";
+import hpp from "hpp";
 
+// import sanitize from "express-mongo-sanitize";
+// import xss from "xss";
 // import morgan from "morgan";
 
 config();
@@ -26,8 +31,41 @@ process.on("uncaughtException", (error)=>{
 	process.exit(1);
 });
 
+// Use it according to requirements of your application and do not use it blindly
+const limiter = rateLimit({
+	max: 100,
+	windowMs: 60*60*1000,
+	message: "ERROR 429: Rate Limit Exceeded for the IP Address. Wait an hour before you request this route again"
+});
+
 const app = express();
 const port = 3000;
+
+// Set Security Headers automatically with Helmet Middleware
+// Use it just above the middleware stack so that it sets the headers properly
+app.use(helmet());
+
+// Prevent XSS Attacks and Convert HTML to Entities in Input Fields
+// app.use(xss);
+
+// Prevent Parameter pollution
+// Express evaluates multiple values for the same query as an array and req.query.field = [...values]
+app.use(hpp({
+	whitelist: [
+		"duration",
+		"ratingsQuantity",
+		"ratingsAverage",
+		"maxGroupSize",
+		"difficulty",
+		"price"
+	]
+}));
+
+// Prevent NoSQL Query Injections for MongoDB
+// app.use(sanitize());
+
+// Rate Limiting Plugin for API routes only, not for the overall website
+app.use("/api", limiter);
 
 // Custom Logger middleware
 app.use((req, res, next)=>{
@@ -50,7 +88,9 @@ app.set("query parser", "extended");
 // app.use(morgan("dev"));
 
 // Enables to use Json in Express App
-app.use(express.json());
+// We can specify some options in the object such as limit 
+// This understands conventional number:unit string
+app.use(express.json({ limit: "10kb" }));
 
 // Router Middleware
 app.use("/api/v1/tours", tourRouter);

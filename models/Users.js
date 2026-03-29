@@ -1,7 +1,5 @@
-import crypto from "crypto";
 import { Schema, model } from "mongoose";
 import validator from "validator";
-import bcrypt from "bcrypt";
 
 // Validators format
 // validate: { validator: function(value), message: errorMessage }
@@ -43,7 +41,12 @@ const userSchema = new Schema({
 	},
 	passwordChangedAt: Date,
 	passwordResetToken: String,
-	passwordResetExpires: String
+	passwordResetExpires: String,
+	active: {
+		type: Boolean,
+		default: true,
+		select: false
+	}
 });
 
 export default model("Users", userSchema);
