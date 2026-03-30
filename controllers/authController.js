@@ -1,10 +1,10 @@
 import Users from "../models/Users.js";
 import jwt from "jsonwebtoken";
 import { config } from "dotenv";
-import AppError from "../appError.js";
+import AppError from "../utils/appError.js";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import sendEmail from "../sendEmail.js";
+import sendEmail from "../utils/sendEmail.js";
 
 config();
 

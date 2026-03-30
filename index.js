@@ -4,7 +4,7 @@ import userRouter from "./routes/userRoutes.js";
 import tourRouter from "./routes/tourRoutes.js";
 import { config } from "dotenv";
 import mongoose from "mongoose";
-import AppError from "./appError.js";
+import AppError from "./utils/appError.js";
 import { errorHandler } from "./controllers/errorController.js";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";

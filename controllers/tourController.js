@@ -1,5 +1,5 @@
 import Tours from "../models/Tours.js";
-import AppError from "../appError.js";
+import AppError from "../utils/appError.js";
 
 /**
  * Express v5 - Automatic Sync and Async Error Handling
@@ -153,7 +153,12 @@ export const createTour = async (req, res)=>{
 
 export const getTour = async (req, res, next)=>{
 	const tourId = req.params.id;
-	const tour = await Tours.findById(tourId);
+	const tour = await Tours.findById(tourId).populate({
+		// The field which you want to show documents on
+		path: "guides",
+		// The fields which you desire to be shown in the populated field
+		select: "-__v -passwordChangedAt"
+	});
 	if(!tour){
 		return next(new AppError("Tour Not Found with that ID", 404));
 	}

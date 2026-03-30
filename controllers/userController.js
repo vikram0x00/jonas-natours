@@ -1,5 +1,5 @@
 import Users from "../models/Users.js";
-import AppError from "../appError.js";
+import AppError from "../utils/appError.js";
 
 export const getAllUsers = async (req, res) => {
 	const users = await Users.find({ active: { $ne: false } }).select("-password");

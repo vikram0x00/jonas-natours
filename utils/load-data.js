@@ -7,7 +7,7 @@
 import { config } from "dotenv";
 import mongoose from "mongoose";
 import { readFileSync } from "fs";
-import Tours from "./models/Tours.js";
+import Tours from "../models/Tours.js";
 
 config();
 
@@ -17,9 +17,9 @@ mongoose.connect(DB_URL).then(()=>{
 	console.log("Connected To Database");
 });
 
-const fileData = JSON.parse(readFileSync("./data/tours.json", "utf-8"));
+const fileData = JSON.parse(readFileSync("./data/tours-full.json", "utf-8"));
 
 await Tours.create(fileData);
 
-// The Create Method takes as much documents as possible in the parameters, as an array
+// The Create Method takes as many documents as possible in the parameters, as an array
 // We can supply multiple documents into it at once

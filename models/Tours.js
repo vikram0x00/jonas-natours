@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { slugify } from "../slugify.js";
+import { slugify } from "../utils/slugify.js";
 // import validator from "validator";
 
 const tourSchema = new Schema({
@@ -76,6 +76,36 @@ const tourSchema = new Schema({
 			message: "A Tour must have a difficulty of easy, medium or difficult"
 		}
 	},
+	startLocation: {
+		// GeoJSON MongoDB Feature
+		type: {
+			type: String,
+			default: "Point",
+			enum: ["Point"]
+		},
+		coordinates: [Number]
+	},
+	// Embedded Documents instead of Referenced Documents
+	// Use Arrays in Schema
+	locations: [
+		{
+			type: {
+				type: String,
+				default: "Point",
+				enum: ["Point"]
+			},
+			coordinates: [Number],
+			address: String,
+			description: String,
+			day: Number
+		}
+	],
+	guides: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: "Users"
+		}
+	],
 	slug: String,
 	secretTour: {
 		type: Boolean,
@@ -111,6 +141,11 @@ tourSchema.pre(/^find/, function(next){
 tourSchema.pre("aggregate", function(next){
 	this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
 	// REMINDER: DO NOT USE NEXT HERE
+});
+
+tourSchema.pre("save", async function(){
+	const guides = this.guides.map(async (id)=> await Users.findById(id));
+	this.guides = await Promise.all(guides);
 });
 
 // Storing properties like duration in weeks in a Database is inefficient
