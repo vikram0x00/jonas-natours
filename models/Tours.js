@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 import { slugify } from "../utils/slugify.js";
+import Users from "../models/Users.js";
 // import validator from "validator";
 
 const tourSchema = new Schema({

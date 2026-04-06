@@ -53,7 +53,7 @@ export const login = async (req, res, next)=>{
 	const token = signJWTToken(user._id);
 	// Unsecured HTTP Token, do not use in Production environments without HTTPS
 	res.cookie("jwt", token, {
-		expires: Date.now() + 2592000000
+		expiresIn: Date.now() + 2592000000
 	});
 	res.status(200).json({
 		status: "success",
@@ -94,6 +94,7 @@ export const protect = async (req, res, next)=>{
 	req.user = {
 		// _id returns ObjectId and id returns string
 		id: user.id,
+		_id: user._id,
 		name: user.name,
 		email: user.email,
 		passwordChangedAt: user.passwordChangedAt || null,

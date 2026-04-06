@@ -17,7 +17,9 @@ mongoose.connect(DB_URL).then(()=>{
 	console.log("Connected To Database");
 });
 
-const fileData = JSON.parse(readFileSync("./data/tours-full.json", "utf-8"));
+let fileData = JSON.parse(readFileSync("./data/tours-full.json", "utf-8"));
+
+fileData.forEach(e => delete e._id);
 
 await Tours.create(fileData);
 

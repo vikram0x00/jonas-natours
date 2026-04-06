@@ -2,6 +2,7 @@ import express from "express";
 import { styleText } from "util";
 import userRouter from "./routes/userRoutes.js";
 import tourRouter from "./routes/tourRoutes.js";
+import reviewRouter from "./routes/reviewRoutes.js";
 import { config } from "dotenv";
 import mongoose from "mongoose";
 import AppError from "./utils/appError.js";
@@ -10,6 +11,7 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import hpp from "hpp";
 
+// DONT USE THESE, INSTEAD USE TYPESCRIPT, ZOD, 2LVL VALIDATION AND ORM
 // import sanitize from "express-mongo-sanitize";
 // import xss from "xss";
 // import morgan from "morgan";
@@ -33,7 +35,7 @@ process.on("uncaughtException", (error)=>{
 
 // Use it according to requirements of your application and do not use it blindly
 const limiter = rateLimit({
-	max: 100,
+	max: 1000,
 	windowMs: 60*60*1000,
 	message: "ERROR 429: Rate Limit Exceeded for the IP Address. Wait an hour before you request this route again"
 });
@@ -95,6 +97,7 @@ app.use(express.json({ limit: "10kb" }));
 // Router Middleware
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/reviews", reviewRouter);
 
 // Refactored Routes
 
