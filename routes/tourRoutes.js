@@ -15,13 +15,13 @@ tourRouter.param("id", checkId);
 
 tourRouter.use("/:id/reviews", reviewRouter);
 
-tourRouter.get("/", protect, getAllTours);
+tourRouter.get("/", protect, restrictTo("admin", "lead-guide"), getAllTours);
 tourRouter.get("/top-5-tours", aliasTopTours);
 tourRouter.get("/tour-stats", getTourStats);
-tourRouter.get("/monthly-plan/:year", getMonthlyPlan);
+tourRouter.get("/monthly-plan/:year", protect, restrictTo("admin", "lead-guide"), getMonthlyPlan);
 tourRouter.get("/:id", getTour);
-tourRouter.post("/", checkBody, createTour);
-tourRouter.patch("/:id", checkBody, updateTour);
+tourRouter.post("/", checkBody, protect, restrictTo("admin", "lead-guide"), createTour);
+tourRouter.patch("/:id", checkBody, protect, restrictTo("admin", "lead-guide"), updateTour);
 tourRouter.delete("/:id", protect, restrictTo("admin"), deleteTour);
 
 export default tourRouter;

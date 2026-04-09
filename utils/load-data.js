@@ -8,6 +8,8 @@ import { config } from "dotenv";
 import mongoose from "mongoose";
 import { readFileSync } from "fs";
 import Tours from "../models/Tours.js";
+import Users from "../models/Users.js";
+import Reviews from "../models/Reviews.js";
 
 config();
 
@@ -17,11 +19,15 @@ mongoose.connect(DB_URL).then(()=>{
 	console.log("Connected To Database");
 });
 
-let fileData = JSON.parse(readFileSync("./data/tours-full.json", "utf-8"));
+const loadData = async (model, fileName)=>{
+	let fileData = JSON.parse(readFileSync(fileName, "utf-8"));
+	fileData.forEach(e => delete e._id);
+	await model.create(fileData);
+}
 
-fileData.forEach(e => delete e._id);
-
-await Tours.create(fileData);
+await loadData(Tours, "./data/tours-full.json");
+await loadData(Users, "./data/users.json");
+await loadData(Reviews, "./data/reviews.json");
 
 // The Create Method takes as many documents as possible in the parameters, as an array
 // We can supply multiple documents into it at once

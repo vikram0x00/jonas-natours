@@ -26,6 +26,20 @@ export const updateMe = async (req, res, next)=>{
 	});
 }
 
+export const getMe = async (req, res, next)=>{
+	res.status(200).json({
+		status: "success",
+		data: {
+			user: {
+				name: req.user.name,
+				email: req.user.email,
+				id: req.user.id,
+				photo: req.user.photo || "no_photo"
+			}
+		}
+	});
+}
+
 export const deleteMe = async (req, res, next)=>{
 	await Users.findByIdAndUpdate(req.user.id, { active: false });
 	res.status(204).json({
