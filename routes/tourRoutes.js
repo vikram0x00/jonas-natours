@@ -1,12 +1,19 @@
 import { Router } from "express";
 import { checkId, checkBody, getTourStats, aliasTopTours, getAllTours, getTour, createTour, updateTour, deleteTour, getMonthlyPlan } from "../controllers/tourController.js";
 import { protect, restrictTo } from "../controllers/authController.js";
+import reviewRouter from "./reviewRoutes.js";
 
 const tourRouter = Router();
 
 // Format: routerInstance.param("paramName", (req, res, nextFn, valueOfParam)=> ... );
 
 tourRouter.param("id", checkId);
+
+// Mounting a Router inside a router
+// Nested Routes
+// tourRouter.post("/:id/reviews", protect, restrictTo("user"), createReview);
+
+tourRouter.use("/:id/reviews", reviewRouter);
 
 tourRouter.get("/", protect, getAllTours);
 tourRouter.get("/top-5-tours", aliasTopTours);

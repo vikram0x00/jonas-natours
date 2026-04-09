@@ -71,7 +71,7 @@ app.use("/api", limiter);
 
 // Custom Logger middleware
 app.use((req, res, next)=>{
-	console.log(styleText(["bgBlue", "white"], " HTTP "), "New Request", styleText("yellow", req.method.toUpperCase()), req.url);
+	console.log(styleText(["bgBlue", "white"], " HTTP "), "New Request", styleText("yellow", req.method.toUpperCase()), req.url, styleText("green", res.statusCode.toString()));
 	// If we dont call the next function, function and the execution
 	// All the functionality is halted
 	next();

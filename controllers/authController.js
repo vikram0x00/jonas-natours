@@ -17,9 +17,9 @@ const signJWTToken = (id) =>{
 }
 
 export const signUp = async (req, res, next)=>{
-	const { name, password, email } = req.body;
+	const { name, password, email, role } = req.body;
 	const hashedPass = await bcrypt.hash(password, 10);
-	const newUser = await Users.create({ name, email, password: hashedPass });
+	const newUser = await Users.create({ name, email, password: hashedPass, role });
 	const token = signJWTToken(newUser._id);
 
 	res.status(201).json({

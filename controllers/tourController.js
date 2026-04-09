@@ -157,8 +157,8 @@ export const getTour = async (req, res, next)=>{
 		// The field which you want to show documents on
 		path: "guides",
 		// The fields which you desire to be shown in the populated field
-		select: "-__v -passwordChangedAt"
-	});
+		select: "-__v -passwordChangedAt -password -role"
+	}).populate("reviews");
 	if(!tour){
 		return next(new AppError("Tour Not Found with that ID", 404));
 	}

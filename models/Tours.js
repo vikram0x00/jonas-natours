@@ -156,4 +156,13 @@ tourSchema.virtual("durationWeeks").get(function (){
 	return this.duration / 7;
 });
 
+// Virtual Populate
+// This only populates when you call it, or else it does not populate
+// .populate("field")
+tourSchema.virtual("reviews", {
+	ref: "Reviews",
+	foreignField: "tour",
+	localField: "_id"
+});
+
 export default model("Tours", tourSchema);
