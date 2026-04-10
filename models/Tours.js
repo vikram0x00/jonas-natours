@@ -136,12 +136,13 @@ tourSchema.pre(/^find/, function(next){
 	// this keyword can be chained with methods for more querying operations
 	// De-select secret tours
 	this.find({ secretTour: { $ne: true } });
-	// REMINDER: DO NOT USE NEXT HERE
 });
 
 tourSchema.pre("aggregate", function(next){
-	this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
-	// REMINDER: DO NOT USE NEXT HERE
+	// Geonear queries must be at the index 0
+	if(!"$geoNear" in this.pipeline()[0]){
+		this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+	}
 });
 
 tourSchema.pre("save", async function(){
@@ -164,5 +165,14 @@ tourSchema.virtual("reviews", {
 	foreignField: "tour",
 	localField: "_id"
 });
+
+// Indexing Fields to reduce Database Querying and improve overall latency
+// Performance Improvements
+// Indexing is a complex and a long-term process of monitoring user requests and preparing a complex index 
+// Which reduces the latency and performs the best
+
+tourSchema.index({ price: 1, ratingsAverage: -1 });
+tourSchema.index({ slug: 1 });
+tourSchema.index({ startLocation: "2dsphere" });
 
 export default model("Tours", tourSchema);

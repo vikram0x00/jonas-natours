@@ -8,6 +8,64 @@ import AppError from "../utils/appError.js";
  * Just use next(error); for custom Error cases
  */
 
+// Get Distances of all tours given a latitude and longitude
+export const getDistances = async (req, res)=>{
+	const { latlng, unit } = req.params;
+	const [latitude, longitude] = latlng.split(",");
+	if(!latitude || !longitude){
+		return next(new AppError("No Latitude or Longitude", 400));
+	}
+	const distanceMultiplier = unit === "mi" ? 0.000621371 : 0.001;
+	const distances = await Tours.aggregate([
+		{
+			$geoNear: {
+				near: {
+					type: "Point",
+					coordinates: [longitude * 1, latitude * 1]
+				},
+				distanceField: "distance",
+				distanceMultiplier
+			}
+		},
+		{
+			$project: {
+				distance: 1,
+				name: 1
+			}
+		}
+	]);
+	res.status(200).json({
+		status: "success",
+		query: { latitude, longitude, unit },
+		results: distances.length,
+		data: distances
+	});
+}
+
+// Get tours within a certain distance specified and a certain lat, lon
+export const getToursWithin = async (req, res)=>{
+	const { distance, latlng, unit } = req.params;
+	const [latitude, longitude] = latlng.split(",");
+	if(!distance) return next(new AppError("No Distance Provided", 400));
+	if(!latitude || !longitude){
+		return next(new AppError("No Latitude or Longitude", 400));
+	}
+	const radius = unit === "mi" ? distance / 3963.2 : distance / 6378.1;
+	const tours = await Tours.find({
+		startLocation: {
+			$geoWithin: {
+				$centerSphere: [[longitude, latitude], radius]
+			}
+		}
+	});
+	res.status(200).json({
+		status: "success",
+		query: { distance, latitude, longitude, unit },
+		results: tours.length,
+		data: tours
+	});
+}
+
 export const aliasTopTours = async (req, res)=>{
 	const json = await Tours.find().sort("price -ratingsAverage").select("name description price ratingsAverage difficulty").limit(5);
 	res.status(200).json({

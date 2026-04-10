@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { checkId, checkBody, getTourStats, aliasTopTours, getAllTours, getTour, createTour, updateTour, deleteTour, getMonthlyPlan } from "../controllers/tourController.js";
+import { getDistances, getToursWithin, checkId, checkBody, getTourStats, aliasTopTours, getAllTours, getTour, createTour, updateTour, deleteTour, getMonthlyPlan } from "../controllers/tourController.js";
 import { protect, restrictTo } from "../controllers/authController.js";
 import reviewRouter from "./reviewRoutes.js";
 
@@ -14,6 +14,10 @@ tourRouter.param("id", checkId);
 // tourRouter.post("/:id/reviews", protect, restrictTo("user"), createReview);
 
 tourRouter.use("/:id/reviews", reviewRouter);
+
+// Geospatial Queries
+tourRouter.get("/tours-within/:distance/center/:latlng/unit/:unit", getToursWithin);
+tourRouter.get("/distances/:latlng/unit/:unit", getDistances);
 
 tourRouter.get("/", protect, restrictTo("admin", "lead-guide"), getAllTours);
 tourRouter.get("/top-5-tours", aliasTopTours);
