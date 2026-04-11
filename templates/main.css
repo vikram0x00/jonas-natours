@@ -1,0 +1,191 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
+
+html, body{
+	padding: 0;
+	margin: 0;
+	background-color: black;
+	color: white;
+	scroll-behavior: smooth;
+	font-family: "Geist";
+}
+
+*::selection{
+	background-color: #41ff80;
+	color: black;
+}
+
+.navbar{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background-color: transparent;
+	position: sticky;
+	top: 10px;
+	height: 60px;
+	padding-inline: 10px;
+	margin: 10px;
+	border-radius: 10px;
+	backdrop-filter: blur(5px);
+	border: 1px solid #2d2d2d;
+}
+
+.button{
+	border: 1px solid #2d2d2d;
+	text-decoration: none;
+	padding: 5px 15px;
+	border-radius: 5px;
+	color: white;
+}
+
+.button:hover{
+	border: 1px solid white;
+	transition: 0.4s ease;
+}
+
+.logo a{
+	font-family: "PolySans Median";
+	color: #41ff80;
+	text-decoration: none;
+}
+
+nav.footer{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding-inline: 10px;
+	background-color: #2d2d2d;
+}
+
+.link{
+	color: white;
+	text-decoration: none;
+	font-size: 18px;
+	margin-inline: 5px;
+}
+
+.link:hover{
+	text-decoration: 2px solid underline #41ff80;
+}
+
+.main{
+	padding: 0 2em;
+	display: flex;
+	align-items: flex-start;
+	flex-direction: column;
+}
+
+.main-auth{
+	padding: 5em;
+	display: flex;
+	align-items: flex-start;
+	flex-direction: column;
+}
+
+.tour-container{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.tour-container .tour-item{
+	border: 1px solid #2d2d2d;
+	max-width: 350px;
+	margin: 10px;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	flex-direction: column;
+	border-radius: 10px;
+}
+
+.tour-item img{
+	border-radius: 10px 10px 0 0;
+	width: 350px;
+	height: 200px;
+}
+
+.tour-item h2{
+	line-height: 0;
+}
+
+p{
+	margin: 0;
+}
+
+i{
+	font-size: 17px;
+	margin-inline: 5px;
+}
+
+.tour-item span{
+	margin-inline: 10px;
+}
+
+.tour-item div.info{
+	padding: 10px;
+}
+
+.tour-item .details{
+	display: grid;
+    grid-template-columns: 150px 150px;
+    grid-template-rows: repeat(3, 30px);
+	align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.tour-item a.button-lg {
+	background: #41ff80;
+    color: black;
+    text-decoration: none;
+    text-align: left;
+    padding: 10px 40px;
+    margin: 10px;
+    border-radius: 10px;
+    font-size: 17px;
+}
+
+/* Login / Signup */
+.main-container{
+	padding: 2em 4em;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	flex-direction: column;
+	border: 1px solid #2d2d2d;
+	border-radius: 10px;
+	margin: auto;
+	margin-bottom: 20px;
+}
+
+.main-container label{
+	font-size: 20px;
+}
+
+.main-container input{
+	font-size: 20px;
+	font-family: "Geist";
+	padding: 10px;
+	outline: none;
+	border-radius: 5px;
+	margin-block: 10px;
+	color: white;
+	border: 1px solid #717171;
+	background-color: black;
+}
+
+.main-container button{
+	background: #41ff80;
+    color: black;
+	border: none;
+    text-decoration: none;
+    text-align: center;
+	width: calc(100%);
+	margin: 20px 0 0 0;
+    padding: 10px 40px;
+	font-family: "Geist";
+    border-radius: 10px;
+    font-size: 20px;
+	cursor: pointer;
+}

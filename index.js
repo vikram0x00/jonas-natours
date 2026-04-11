@@ -43,6 +43,11 @@ const limiter = rateLimit({
 const app = express();
 const port = 3000;
 
+// Set Template Engine to Pug
+app.set("view engine", "pug");
+// Set Template Folder to views folder
+app.set("views", "./views");
+
 // Set Security Headers automatically with Helmet Middleware
 // Use it just above the middleware stack so that it sets the headers properly
 app.use(helmet());
@@ -93,6 +98,11 @@ app.set("query parser", "extended");
 // We can specify some options in the object such as limit 
 // This understands conventional number:unit string
 app.use(express.json({ limit: "10kb" }));
+
+// Routes
+app.get("/", (req, res)=>{
+	res.status(200).render("base");
+});
 
 // Router Middleware
 app.use("/api/v1/tours", tourRouter);
