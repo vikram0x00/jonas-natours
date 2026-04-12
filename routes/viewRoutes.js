@@ -5,10 +5,6 @@ const viewRouter = Router();
 
 viewRouter.get("/", getOverview);
 
-viewRouter.get("/tour", (req, res)=>{
-	res.status(200).render("tour", {
-		title: "The Sea Explorer"
-	});
-});
+viewRouter.get("/tour/:slug", getTour);
 
 export default viewRouter;

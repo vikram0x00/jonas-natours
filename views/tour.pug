@@ -1,4 +1,63 @@
 extends base
 
-block content 
-	h1 This is Tour Details Page 
+block content
+	section.banner(style=`background-image: url(/img/${tour.imageCover})`)
+		h1= tour.name
+		p
+			span
+				i.bi.bi-geo-alt
+				|	#{tour.startLocation.description}
+			span
+				i.bi.bi-clock
+				|	#{tour.duration} days
+	section.info
+		.about
+			h3 About this Tour
+			p
+				| #{tour.description}
+		.tour-info
+			h3 Tour Info
+			span
+				i.bi.bi-geo-alt
+				|	#{tour.startLocation.description}
+			span
+				i.bi.bi-calendar
+				|	#{tour.startDates[0].toLocaleString("en-in", { month: "long", year: "numeric" })}
+			span
+				i.bi.bi-flag
+				|	#{tour.locations.length} stops
+			span
+				i.bi.bi-person
+				|	#{tour.maxGroupSize} people
+			span
+				i.bi.bi-tag-fill
+				|	$#{tour.price}
+			span
+				i.bi.bi-star-fill
+				|	#{tour.ratingsAverage} (#{tour.ratingsQuantity})
+		.guides
+			h3 Tour Guides
+			each guide in tour.guides 
+				.guide-item
+					img(src=`/img/${guide.photo}`)
+					span= guide.name
+	section.images
+		each image in tour.images
+			img(src=`/img/${image}` alt=`${image}`)
+	section.map
+		h1 Tour Map
+	section.reviews
+		h1 Reviews
+		.reviews-container
+			each review in tour.reviews 
+				.review-item
+					div
+						img(src='/50x50.png' alt='User')
+						span= review.user
+					p= review.review
+					span
+						i.bi.bi-star-fill
+						| #{review.rating}
+	section.book
+		h2 What are you waiting for? Book the Tour Now!
+		a.button-lg(href='#') BOOK NOW

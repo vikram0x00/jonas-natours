@@ -79,7 +79,7 @@ app.use("/api", limiter);
 app.use((req, res, next)=>{
 	// FIXED: Logging Status Code always 200
 	res.on("finish", ()=>{
-		console.log(styleText(["bgBlue", "white"], " HTTP "), "New Request", styleText("yellow", req.method.toUpperCase()), req.url, styleText("green", res.statusCode.toString()));
+		console.log(styleText(["bgBlue", "white"], " HTTP "), "New Request", styleText("yellow", req.method.toUpperCase()), req.originalUrl, styleText("green", res.statusCode.toString()));
 	});
 	// If we dont call the next function, function and the execution
 	// All the functionality is halted
