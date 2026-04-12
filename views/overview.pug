@@ -1,0 +1,31 @@
+extends base
+
+block content 
+	section.main 
+		.tour-container
+			each tour in tours
+				.tour-item
+					img(alt=`${tour.name}` src=`/img/${tour.imageCover}`)
+					.info
+						h2= tour.name
+						p= tour.summary
+					.details
+						span
+							i.bi.bi-geo-alt
+							| #{tour.startLocation.description}
+						span 
+							i.bi.bi-calendar
+							| #{tour.startDates[0].toLocaleString("en-in", { month: "long", year: "numeric" })}
+						span 
+							i.bi.bi-flag
+							| #{tour.locations.length} stops
+						span 
+							i.bi.bi-person
+							| #{tour.maxGroupSize} people
+						span 
+							i.bi.bi-tag-fill
+							| $#{tour.price} per person
+						span 
+							i.bi.bi-star-fill
+							| #{tour.ratingsAverage} (#{tour.ratingsQuantity})
+					a.button-lg(href=`/tour/${tour.slug}`) DETAILS

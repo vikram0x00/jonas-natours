@@ -10,6 +10,7 @@ import { errorHandler } from "./controllers/errorController.js";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import hpp from "hpp";
+import viewRouter from "./routes/viewRoutes.js";
 
 // DONT USE THESE, INSTEAD USE TYPESCRIPT, ZOD, 2LVL VALIDATION AND ORM
 // import sanitize from "express-mongo-sanitize";
@@ -76,7 +77,10 @@ app.use("/api", limiter);
 
 // Custom Logger middleware
 app.use((req, res, next)=>{
-	console.log(styleText(["bgBlue", "white"], " HTTP "), "New Request", styleText("yellow", req.method.toUpperCase()), req.url, styleText("green", res.statusCode.toString()));
+	// FIXED: Logging Status Code always 200
+	res.on("finish", ()=>{
+		console.log(styleText(["bgBlue", "white"], " HTTP "), "New Request", styleText("yellow", req.method.toUpperCase()), req.url, styleText("green", res.statusCode.toString()));
+	});
 	// If we dont call the next function, function and the execution
 	// All the functionality is halted
 	next();
@@ -86,7 +90,7 @@ app.use((req, res, next)=>{
 // If no Route Specified, It will Serve at the Root Route i.e /
 // app.use(express.static(`./public`));
 // We will specify a Route by
-app.use("/public", express.static(`./public`));
+app.use("/", express.static(`./public`));
 
 // For Extended Request Query parsing
 app.set("query parser", "extended");
@@ -100,9 +104,7 @@ app.set("query parser", "extended");
 app.use(express.json({ limit: "10kb" }));
 
 // Routes
-app.get("/", (req, res)=>{
-	res.status(200).render("base");
-});
+app.use("/", viewRouter);
 
 // Router Middleware
 app.use("/api/v1/tours", tourRouter);

@@ -80,7 +80,7 @@ export const errorHandler = (err, req, res, next)=>{
 	}
 	else if (process.env.NODE_ENV === "production") {
 		if(err.isOperational){
-			res.status(err.statusCode).json({
+			return res.status(err.statusCode).json({
 				status: err.status,
 				message: err.message
 			});

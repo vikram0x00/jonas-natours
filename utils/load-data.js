@@ -8,8 +8,8 @@ import { config } from "dotenv";
 import mongoose from "mongoose";
 import { readFileSync } from "fs";
 import Tours from "../models/Tours.js";
-import Users from "../models/Users.js";
-import Reviews from "../models/Reviews.js";
+// import Users from "../models/Users.js";
+// import Reviews from "../models/Reviews.js";
 
 config();
 
@@ -26,8 +26,8 @@ const loadData = async (model, fileName)=>{
 }
 
 await loadData(Tours, "./data/tours-full.json");
-await loadData(Users, "./data/users.json");
-await loadData(Reviews, "./data/reviews.json");
+// await loadData(Users, "./data/users.json");
+// await loadData(Reviews, "./data/reviews.json");
 
 // The Create Method takes as many documents as possible in the parameters, as an array
 // We can supply multiple documents into it at once

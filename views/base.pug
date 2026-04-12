@@ -1,7 +1,19 @@
-doctype html
-html
-	head
-		title Natours 
+doctype html 
+html 
+	head 
+		//- Define a route at the root of the application ie / and make it serve static assets
+		//- The HTML file by default requests for these and it does not look in its folders but will hit a HTTP Request to the server
+		//- The Static files folder should have the requested assets and if not, functionalities might break
+		title Natours
+		meta(http-equiv="Content-Type", content="text/html;charset=UTF-8")
+		meta(http-equiv="Content-Security-Policy" content="img-src *;")
+		link(rel="shortcut icon" href="/img/favicon.png" type="image/png")
+		link(rel="stylesheet" href="main.css")
 	body 
-		h1 The Park Camper
-		p Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae tenetur cupiditate quis laudantium aliquam fugiat in ratione provident praesentium asperiores.
+		//- The normal headers // will be rendered in the final HTML
+		// HEADER
+		include _navbar
+		//- Any other sub-template will fill in the content below this
+		block content 
+		// FOOTER
+		include _footer

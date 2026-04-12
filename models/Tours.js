@@ -84,7 +84,8 @@ const tourSchema = new Schema({
 			default: "Point",
 			enum: ["Point"]
 		},
-		coordinates: [Number]
+		coordinates: [Number],
+		description: String
 	},
 	// Embedded Documents instead of Referenced Documents
 	// Use Arrays in Schema
