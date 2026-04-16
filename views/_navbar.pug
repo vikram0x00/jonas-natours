@@ -3,5 +3,12 @@ nav.navbar
 		a(href='/')
 			h2 Natours
 	.links
-		a.button(href='#') Log In
-		a.button(href='#') Sign Up
+		if user 
+			.user
+				a.log-out(href='/logout') Log Out
+				a.user-link(href='/me')
+					img(src=`/img/${user.photo}` alt=`${user.name}`)
+					|  #{user.name.split(" ")[0]}
+		else
+			a.button(href='/login') Log In
+			a.button(href='/signup') Sign Up

@@ -368,3 +368,58 @@ section.book a.button-lg{
     font-size: 20px;
 	cursor: pointer;
 }
+
+.hidden {
+	display: none !important;
+}
+
+.notification{
+	background-color: #0062ff60;
+	border-radius: 10px;
+	display: flex;
+	align-items: center;
+	margin: 20px;
+	padding: 20px;
+	border: 1px #0073ff solid;
+}
+
+.user{
+	display: flex;
+	align-items: center;
+	padding: 10px;
+	border-radius: 5px;
+}
+
+.user .log-out{
+	background-color: transparent;
+	border: 1px solid #2d2d2d;
+	padding: 10px;
+	border-radius: 5px;
+	color: white;
+	text-decoration: none;
+	margin-inline: 5px;
+}
+
+.user a.log-out:hover{
+	border: 1px solid white;
+	transition: 0.2s ease-in-out;
+}
+
+.user .user-link{
+	background-color: #2d2d2d;
+	padding: 0 10px 0 0;
+	border-radius: 5px;
+	color: white;
+	text-decoration: none;
+	margin-inline: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.user .user-link img{
+	height: 40px;
+	width: 40px;
+	border-radius: 5px 0 0 5px;
+	margin-right: 5px;
+}

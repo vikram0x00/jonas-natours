@@ -11,6 +11,7 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import hpp from "hpp";
 import viewRouter from "./routes/viewRoutes.js";
+import cookieParser from "cookie-parser";
 
 // DONT USE THESE, INSTEAD USE TYPESCRIPT, ZOD, 2LVL VALIDATION AND ORM
 // import sanitize from "express-mongo-sanitize";
@@ -51,7 +52,7 @@ app.set("views", "./views");
 
 // Set Security Headers automatically with Helmet Middleware
 // Use it just above the middleware stack so that it sets the headers properly
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 
 // Prevent XSS Attacks and Convert HTML to Entities in Input Fields
 // app.use(xss);
@@ -102,6 +103,10 @@ app.set("query parser", "extended");
 // We can specify some options in the object such as limit 
 // This understands conventional number:unit string
 app.use(express.json({ limit: "10kb" }));
+
+// Enables Reading of Cookies in Every Request
+// Access with `req.cookies`
+app.use(cookieParser());
 
 // Routes
 app.use("/", viewRouter);

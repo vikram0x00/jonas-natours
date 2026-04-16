@@ -27,6 +27,7 @@ html, body{
 	border-radius: 10px;
 	backdrop-filter: blur(5px);
 	border: 1px solid #2d2d2d;
+	z-index: 10;
 }
 
 .button{
@@ -294,6 +295,14 @@ section.map{
 	padding: 1em;
 }
 
+section#map{
+	padding: 1em;
+	border-radius: 10px;
+	margin: 1em;
+	height: 70vh;
+	z-index: 0;
+}
+
 section.reviews{
 	display: flex;
 	align-items: flex-start;
@@ -308,6 +317,7 @@ section.reviews .reviews-container{
 	height: 30vh;
 	width: 96vw;
 	overflow-x: scroll;
+	overflow-y: hidden;
 }
 
 /* WebKit browsers */
@@ -337,6 +347,8 @@ section.reviews .reviews-container::-webkit-scrollbar-thumb {
 .reviews-container .review-item img{
 	border-radius: 10px;
 	margin: 0 10px 0 0;
+	height: 50px;
+	width: 50px;
 }
 
 .reviews-container .review-item p{
@@ -368,4 +380,60 @@ section.book a.button-lg{
     border-radius: 10px;
     font-size: 20px;
 	cursor: pointer;
+}
+
+.hidden {
+	display: none !important;
+}
+
+.notification{
+	background-color: #0062ff60;
+	border-radius: 10px;
+	display: flex;
+	align-items: center;
+	margin: 20px;
+	padding: 20px;
+	border: 1px #0073ff solid;
+}
+
+
+.user{
+	display: flex;
+	align-items: center;
+	padding: 10px;
+	border-radius: 5px;
+}
+
+.user .log-out{
+	background-color: transparent;
+	padding: 10px;
+	border: 1px solid #2d2d2d;
+	border-radius: 5px;
+	color: white;
+	text-decoration: none;
+	margin-inline: 5px;
+}
+
+.user a.log-out:hover{
+	border: 1px solid white;
+	transition: 0.2s ease-in-out;
+}
+
+.user .user-link{
+	background-color: #2d2d2d;
+	padding: 0 10px 0 0;
+	border-radius: 5px;
+	color: white;
+	text-decoration: none;
+	margin-inline: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.user .user-link img{
+	height: 40px;
+	width: 40px;
+	border-radius: 5px 0 0 5px;
+	margin-right: 5px;
 }

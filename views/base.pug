@@ -4,11 +4,13 @@ html
 		//- Define a route at the root of the application ie / and make it serve static assets
 		//- The HTML file by default requests for these and it does not look in its folders but will hit a HTTP Request to the server
 		//- The Static files folder should have the requested assets and if not, functionalities might break
-		title Natours
-		meta(http-equiv="Content-Type", content="text/html;charset=UTF-8")
-		meta(http-equiv="Content-Security-Policy" content="img-src *;")
-		link(rel="shortcut icon" href="/img/favicon.png" type="image/png")
-		link(rel="stylesheet" href="/main.css")
+		block head
+			title #{title}
+			meta(http-equiv="Content-Type", content="text/html;charset=UTF-8")
+			meta(http-equiv="Content-Security-Policy" content="script-src-elem 'self' * 'unsafe-inline' 'unsafe-eval';")
+			link(rel="shortcut icon" href="/img/favicon.png" type="image/png")
+			link(rel="stylesheet" href="/main.css")
+			link(href="https://cdn.maptiler.com/maptiler-sdk-js/v4.0.1/maptiler-sdk.css" rel="stylesheet")
 	body 
 		//- The normal headers // will be rendered in the final HTML
 		// HEADER
@@ -17,3 +19,5 @@ html
 		block content 
 		// FOOTER
 		include _footer
+		script(src="https://cdn.maptiler.com/maptiler-sdk-js/v4.0.1/maptiler-sdk.umd.min.js")
+		script(src="/script.js")

@@ -1,15 +1,18 @@
 extends base
 
+//- block append head 
+	//- script(src="/script.js" defer)
+
 block content
 	section.banner(style=`background-image: url(/img/${tour.imageCover})`)
 		h1= tour.name
 		p
 			span
 				i.bi.bi-geo-alt
-				|	#{tour.startLocation.description}
+				| #{tour.startLocation.description}
 			span
 				i.bi.bi-clock
-				|	#{tour.duration} days
+				| #{tour.duration} days
 	section.info
 		.about
 			h3 About this Tour
@@ -22,19 +25,19 @@ block content
 				|	#{tour.startLocation.description}
 			span
 				i.bi.bi-calendar
-				|	#{tour.startDates[0].toLocaleString("en-in", { month: "long", year: "numeric" })}
+				| #{tour.startDates[0].toLocaleString("en-in", { month: "long", year: "numeric" })}
 			span
 				i.bi.bi-flag
-				|	#{tour.locations.length} stops
+				| #{tour.locations.length} stops
 			span
 				i.bi.bi-person
-				|	#{tour.maxGroupSize} people
+				| #{tour.maxGroupSize} people
 			span
 				i.bi.bi-tag-fill
-				|	$#{tour.price}
+				| $#{tour.price}
 			span
 				i.bi.bi-star-fill
-				|	#{tour.ratingsAverage} (#{tour.ratingsQuantity})
+				| #{tour.ratingsAverage} (#{tour.ratingsQuantity} ratings)
 		.guides
 			h3 Tour Guides
 			each guide in tour.guides 
@@ -46,14 +49,15 @@ block content
 			img(src=`/img/${image}` alt=`${image}`)
 	section.map
 		h1 Tour Map
+		section.map-container(id="map" data-locations=`${JSON.stringify(tour.locations)}`)
 	section.reviews
 		h1 Reviews
 		.reviews-container
 			each review in tour.reviews 
 				.review-item
 					div
-						img(src='/50x50.png' alt='User')
-						span= review.user
+						img(src=`/img/${review.user.photo}` alt='User')
+						span= review.user.name
 					p= review.review
 					span
 						i.bi.bi-star-fill

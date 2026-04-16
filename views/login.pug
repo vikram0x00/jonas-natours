@@ -1,0 +1,15 @@
+extends base
+
+block content
+	#notification.notification.hidden
+		i.bi.bi-info-circle
+		span This is a test notification
+	section.main-auth
+		.main-container
+			h1 Log In to Natours
+			label(for='email') E-Mail Address
+			input#email(type='email' name='email' placeholder='example@mail.com')
+			label(for='password') Password
+			input#password(type='password' name='password' placeholder='••••••••••')
+			button.button-lg(id="submit_btn") LOGIN
+	script(src="/login.js")

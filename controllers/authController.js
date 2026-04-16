@@ -55,9 +55,11 @@ export const login = async (req, res, next)=>{
 	res.cookie("jwt", token, {
 		expiresIn: Date.now() + 2592000000
 	});
+	delete user.password;
 	res.status(200).json({
 		status: "success",
-		token
+		token,
+		data: { user }
 	});
 }
 
@@ -66,6 +68,9 @@ export const protect = async (req, res, next)=>{
 	let token;
 	if(req.headers.authorization && req.headers.authorization.startsWith("Bearer")){
 		token = req.headers.authorization.split(" ")[1];
+	}
+	else if(req.cookies.jwt){
+		token = req.cookies.jwt;
 	}
 	if(!token){
 		return next(new AppError("Unauthorized. Please Log In", 401));
@@ -97,11 +102,51 @@ export const protect = async (req, res, next)=>{
 		_id: user._id,
 		name: user.name,
 		email: user.email,
+		photo: user.photo,
 		passwordChangedAt: user.passwordChangedAt || null,
 		role: user.role || "user"
 	}
 	next();
 }
+
+export const isLoggedIn = async (req, res, next)=>{
+	let token;
+	if(req.cookies.jwt){
+		token = req.cookies.jwt;
+	}
+	if(!token){
+		return next();
+	}
+	// (1) Verifying Token
+	const data = jwt.verify(token, process.env.JWT_SECRET);
+	// (2) Check if user exists in DB
+	const user = await Users.findById(data.id);
+	if(!user){
+		return next();
+	}
+	// (3) Check if user changed password after the token was issued
+	if(user.passwordChangedAt){
+		const jwtIssuedAt = data.iat * 1000;
+		const passChangeAt = new Date(user.passwordChangedAt).getTime();
+		if(passChangeAt > jwtIssuedAt){
+			return next();
+		}
+	}
+	// User is Logged In
+	// If all the above challenges pass, the route will allow the access to the protected route
+	res.locals.user = {
+		// _id returns ObjectId and id returns string
+		id: user.id,
+		_id: user._id,
+		name: user.name,
+		email: user.email,
+		photo: user.photo,
+		passwordChangedAt: user.passwordChangedAt || null,
+		role: user.role || "user"
+	}
+	return next();
+}
+
 
 export const restrictTo = (...roles)=>{
 	// The above spread operator returns an array roles[]
