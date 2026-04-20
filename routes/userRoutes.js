@@ -1,11 +1,12 @@
 import { Router } from "express";
 import { getAllUsers, getUser, createUser, updateUser, deleteUser, updateMe, getMe, deleteMe } from "../controllers/userController.js";
-import { signUp, login, forgotPassword, resetPassword, updatePassword, protect, restrictTo } from "../controllers/authController.js";
+import { signUp, login, forgotPassword, resetPassword, updatePassword, protect, restrictTo, logout } from "../controllers/authController.js";
 
 const userRouter = Router();
 
 userRouter.post("/signup", signUp);
 userRouter.post("/login", login);
+userRouter.get("/logout", logout);
 userRouter.post("/forgotPassword", forgotPassword);
 userRouter.patch("/resetPassword/:token", resetPassword);
 

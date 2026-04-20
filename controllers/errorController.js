@@ -70,6 +70,11 @@ export const errorHandler = (err, req, res, next)=>{
 				stack: err.stack
 			});
 		}
+		if(!req.originalUrl.startsWith("/api")){
+			res.status(err.status).render("error", {
+				title: "Error"
+			});
+		}
 		// Common Dev Error Response 
 		res.status(err.statusCode).json({
 			status: err.status,

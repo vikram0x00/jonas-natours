@@ -1,6 +1,9 @@
 extends base
 
 block content 
+	#notification.notification.hidden
+		i.bi.bi-info-circle
+		span This is a test notification
 	section.main 
 		.tour-container
 			each tour in tours
@@ -29,3 +32,4 @@ block content
 							i.bi.bi-star-fill
 							| #{tour.ratingsAverage} (#{tour.ratingsQuantity})
 					a.button-lg(href=`/tour/${tour.slug}`) DETAILS
+	script(src="/logout.js")

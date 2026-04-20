@@ -63,6 +63,20 @@ export const login = async (req, res, next)=>{
 	});
 }
 
+// In a Token based Authentication system, there is no need for a logout route on the API
+// The logic is to send back a cookie with the same name as the token cookie which we used while login 
+// And also set the expiration time of the cookie to 1 second from now, which makes it get deleted from the browser 
+// and the user has to login again to continue
+export const logout = async (req, res)=>{
+	res.cookie("jwt", "", {
+		expiresIn: Date.now() + 1000
+	});
+	res.status(200).json({
+		status: "success",
+		message: "Logged Out Successfully"
+	});
+}
+
 export const protect = async (req, res, next)=>{
 	// (1) Getting Token
 	let token;

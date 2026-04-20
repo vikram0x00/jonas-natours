@@ -412,9 +412,10 @@ section.book a.button-lg{
 	color: white;
 	text-decoration: none;
 	margin-inline: 5px;
+	font-family: "Geist";
 }
 
-.user a.log-out:hover{
+.user .log-out:hover{
 	border: 1px solid white;
 	transition: 0.2s ease-in-out;
 }
@@ -436,4 +437,22 @@ section.book a.button-lg{
 	width: 40px;
 	border-radius: 5px 0 0 5px;
 	margin-right: 5px;
+}
+
+.error{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	padding: 3em;
+}
+
+.error .button-lg{
+	background-color: #41ff80;
+	color: black;
+	border-radius: 10px;
+	padding: 10px 15px;
+	font-size: 1em;
+	text-decoration: none;
+	margin-top: 20px;
 }
