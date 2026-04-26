@@ -1,0 +1,40 @@
+extends base
+
+block content
+	#notification.notification.hidden
+		i.bi.bi-info-circle
+		span This is a test notification
+	section.main-user
+		.acc-ctl.user-ctl
+			h4 Account Controls
+			a.sidebar-item(href='#') Settings
+			a.sidebar-item(href='#') My Bookings
+			a.sidebar-item(href='#') My Reviews
+			a.sidebar-item(href='#') Billing Details
+		- if(user.role === "admin")
+			.acc-ctl.admin-ctl
+				h4 Admin Actions
+				a.sidebar-item(href='#') Manage Tours
+				a.sidebar-item(href='#') Manage Reviews
+				a.sidebar-item(href='#') Manage Users
+				a.sidebar-item(href='#') Manage Bookings
+		.edit-dtl.acc-dtl
+			h3.title Account Details
+			label(for='name') Name
+			input#name(type='text' placeholder='Name' data-prefill=`${user.name}` value=`${user.name}`)
+			label(for='email') Email
+			input#email(type='email' placeholder='E-Mail Address' data-prefill=`${user.email}` value=`${user.email}`)
+			label(for='profile') Profile Photo
+			img(src=`/img/${user.photo}` height='100' width='100')
+			input#profile(type='file' accept='.jpg,.jpeg,.png')
+			button.button-lg#save Save
+		.edit-dtl.password
+			h3.title Change Password
+			label(for="currentPassword") Current Password
+			input#currentPassword(type='password' placeholder='•••••••••')
+			label(for="newPassword") New Password
+			input#newPassword(type='password' placeholder='•••••••••')
+			label(for="confirmNewPass") Confirm New Password
+			input#confirmNewPass(type='password' placeholder='•••••••••')
+			button.button-lg#savePass Save
+	script(src="/logout.js")

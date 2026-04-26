@@ -120,6 +120,15 @@ export const protect = async (req, res, next)=>{
 		passwordChangedAt: user.passwordChangedAt || null,
 		role: user.role || "user"
 	}
+	res.locals.user = {
+		id: user.id,
+		_id: user._id,
+		name: user.name,
+		email: user.email,
+		photo: user.photo,
+		passwordChangedAt: user.passwordChangedAt || null,
+		role: user.role || "user"
+	}
 	next();
 }
 

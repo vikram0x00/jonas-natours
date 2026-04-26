@@ -71,8 +71,9 @@ export const errorHandler = (err, req, res, next)=>{
 			});
 		}
 		if(!req.originalUrl.startsWith("/api")){
-			res.status(err.status).render("error", {
-				title: "Error"
+			return res.status(Number(err.statusCode)).render("error", {
+				title: "Error " + err.statusCode,
+				message: err.message || "Something unexpected happened"
 			});
 		}
 		// Common Dev Error Response 
@@ -137,6 +138,12 @@ export const errorHandler = (err, req, res, next)=>{
 			return res.status(401).json({
 				status: "failed",
 				message: "Authorization Token Expired"
+			});
+		}
+		if(!req.originalUrl.startsWith("/api")){
+			return res.status(Number(err.statusCode)).render("error", {
+				title: "Error " + error.statusCode,
+				message: err.message || "Something unexpected happened"
 			});
 		}
 		else{

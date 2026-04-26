@@ -5,7 +5,7 @@ nav.navbar
 	.links
 		if user 
 			.user
-				button.log-out(href='/logout' id="logout") Log Out
+				button.log-out(id="logout") Log Out
 				a.user-link(href='/me')
 					img(src=`/img/${user.photo}` alt=`${user.name}`)
 					|  #{user.name.split(" ")[0]}

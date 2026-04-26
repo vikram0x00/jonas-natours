@@ -1,5 +1,6 @@
 import Tours from "../models/Tours.js";
 import Reviews from "../models/Reviews.js";
+import Users from "../models/Users.js";
 import AppError from "../utils/appError.js";
 
 export const getOverview = async (req, res)=>{
@@ -33,5 +34,25 @@ export const getTour = async (req, res, next)=>{
 export const getLoginForm = (req, res)=>{
 	res.status(200).render("login", {
 		title: "Log In | Natours"
+	});
+}
+
+export const getMe = (req, res)=>{
+	res.status(200).render("user", {
+		title: "Account | Natours"
+	});
+}
+
+export const updateMe = async (req, res)=>{
+	const user = req.user;
+	const { name, email } = req.body;
+	if(!name, !email){
+		return next(new AppError("No Name or Email provided in the request body. Invalid Request", 400));
+	}
+	const updatedUser = await Users.findOneAndUpdate({ _id: user._id }, {
+		name, email
+	}, { returnDocument: "after" });
+	res.status(201).render("user", {
+		title: "Account | Natours"
 	});
 }
