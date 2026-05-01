@@ -509,7 +509,7 @@ section.book a.button-lg{
 	grid-row-end: 4;
 }
 
-.edit-dtl a.button-lg{
+.edit-dtl button.button-lg{
 	background: #41ff80;
     color: black;
     text-decoration: none;

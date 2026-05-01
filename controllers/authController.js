@@ -281,7 +281,10 @@ export const updatePassword = async (req, res, next)=>{
 	});
 	// (4) Regen JWT Token, send it to the client
 	const jwtToken = signJWTToken(user._id);
-	res.status(200).json({
+	res.cookie("jwt", jwtToken, {
+		expiresIn: Date.now() + 2592000000
+	});
+	res.status(201).json({
 		status: "success",
 		message: "Password Updated Successfully",
 		token: jwtToken

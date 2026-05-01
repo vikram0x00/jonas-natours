@@ -8,7 +8,7 @@ const triggerNotification = (message)=>{
 	notifElement.classList.remove("hidden");
 	setTimeout(() => {
 		notifElement.classList.add("hidden");
-	}, 4000);
+	}, 2000);
 }
 
 logoutButton.addEventListener("click", async ()=>{

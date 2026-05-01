@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllUsers, getUser, createUser, updateUser, deleteUser, updateMe, getMe, deleteMe } from "../controllers/userController.js";
+import { getAllUsers, getUser, createUser, updateUser, deleteUser, updateMe, getMe, deleteMe, updateUserPhoto, resizeUserPhoto } from "../controllers/userController.js";
 import { signUp, login, forgotPassword, resetPassword, updatePassword, protect, restrictTo, logout } from "../controllers/authController.js";
 
 const userRouter = Router();
@@ -16,7 +16,7 @@ userRouter.use(protect);
 
 userRouter.get("/me", getMe);
 userRouter.patch("/updatePassword", updatePassword);
-userRouter.patch("/updateMe", updateMe);
+userRouter.patch("/updateMe", updateUserPhoto, resizeUserPhoto, updateMe);
 userRouter.delete("/deleteMe", deleteMe);
 
 // This effectively works as userRouter.use(protect, restrictTo(roles));

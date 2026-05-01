@@ -104,6 +104,9 @@ app.set("query parser", "extended");
 // This understands conventional number:unit string
 app.use(express.json({ limit: "10kb" }));
 
+// Enables using Multipart Form Data
+app.use(express.urlencoded({ limit: "10kb" }));
+
 // Enables Reading of Cookies in Every Request
 // Access with `req.cookies`
 app.use(cookieParser());
