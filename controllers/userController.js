@@ -42,10 +42,10 @@ export const getAllUsers = async (req, res) => {
 
 export const updateUserPhoto = upload.single("photo");
 
-export const resizeUserPhoto = (req, res, next)=>{
+export const resizeUserPhoto = async (req, res, next)=>{
 	if(!req.file) return next();
 	req.file.filename = `user-${req.user.id}-${Date.now()}.jpg`
-	sharp(req.file.buffer).resize(400, 400).toFormat("jpg").jpeg({ quality: 90 }).toFile(`public/img/${req.file.filename}`);
+	await sharp(req.file.buffer).resize(400, 400).toFormat("jpg").jpeg({ quality: 90 }).toFile(`public/img/${req.file.filename}`);
 	next();
 }
 

@@ -26,7 +26,7 @@ block content
 			input#email(type='email' placeholder='E-Mail Address' data-prefill=`${user.email}` value=`${user.email}`)
 			label(for='profile') Profile Photo
 			img(src=`/img/${user.photo}` height='100' width='100')
-			input#profile(type='file' accept='.jpg,.jpeg,.png' name='photo')
+			input#profile(type='file' accept='image/*' name='photo')
 			button.button-lg#save Save
 		.edit-dtl.password
 			h3.title Change Password

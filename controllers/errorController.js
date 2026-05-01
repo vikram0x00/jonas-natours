@@ -142,7 +142,7 @@ export const errorHandler = (err, req, res, next)=>{
 		}
 		if(!req.originalUrl.startsWith("/api")){
 			return res.status(Number(err.statusCode)).render("error", {
-				title: "Error " + error.statusCode,
+				title: "Error " + err.statusCode,
 				message: err.message || "Something unexpected happened"
 			});
 		}

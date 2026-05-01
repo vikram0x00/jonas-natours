@@ -1,12 +1,56 @@
 import Tours from "../models/Tours.js";
 import AppError from "../utils/appError.js";
+import multer from "multer";
+import sharp from "sharp";
 
 /**
  * Express v5 - Automatic Sync and Async Error Handling
  * Any Errors in the Route Handlers are thrown into the Central error handler
  * No need to use Try Catch Everywhere
- * Just use next(error); for custom Error cases
+ * Just use return next(error); for custom Error cases
  */
+
+const multerFilter = (req, file, cb)=>{
+	if(file.mimetype.startsWith("image/")){
+		cb(null, true);
+	}
+	else{
+		cb(new AppError("The Uploaded File is not a image. Please Upload an Image", 400), false);
+	}
+}
+
+const upload = multer({
+	storage: multer.memoryStorage(),
+	fileFilter: multerFilter
+});
+
+// Image Handling Middleware for Tours
+export const uploadTourImages = upload.fields([
+	{ name: "imageCover", maxCount: 1 },
+	{ name: "images", maxCount: 3 }
+]);
+
+// Image Processing Middleware for Tours
+export const resizeTourImages = async (req, res, next)=>{
+	if(!req.files.imageCover || !req.files.images) next();
+	
+	// Cover Image Processing
+	const imageCoverFilename = `tour-${req.params.id}-cover.jpg`;
+	await sharp(req.files.imageCover[0].buffer).resize(2000, 1333).toFormat("jpg").jpeg({ quality: 90 }).toFile(`public/img/${imageCoverFilename}`)
+	req.body.imageCover = imageCoverFilename;
+	
+	// Process the Tour Display Images
+	// Initialize empty array because it does not exist on the req.body object
+	req.body.images = [];
+	// The forEach loop does not care if the async function inside it is executed properly or not
+	// Must use Promise.all to map all the async function promises to await and execute them properly before sending it to the next middleware
+	await Promise.all(req.files.images.map(async (file, i) => {
+		const filename = `tour-${req.params.id}-${i+1}.jpg`
+		await sharp(file.buffer).resize(2000, 1333).toFormat("jpg").jpeg({ quality: 90 }).toFile(`public/img/${filename}`);
+		req.body.images.push(filename);
+	}));
+	next();
+}
 
 // Get Distances of all tours given a latitude and longitude
 export const getDistances = async (req, res)=>{

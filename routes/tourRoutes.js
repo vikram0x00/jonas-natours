@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getDistances, getToursWithin, checkId, checkBody, getTourStats, aliasTopTours, getAllTours, getTour, createTour, updateTour, deleteTour, getMonthlyPlan } from "../controllers/tourController.js";
+import { getDistances, getToursWithin, checkId, checkBody, getTourStats, aliasTopTours, getAllTours, getTour, createTour, updateTour, deleteTour, getMonthlyPlan, uploadTourImages, resizeTourImages } from "../controllers/tourController.js";
 import { protect, restrictTo } from "../controllers/authController.js";
 import reviewRouter from "./reviewRoutes.js";
 
@@ -25,7 +25,7 @@ tourRouter.get("/tour-stats", getTourStats);
 tourRouter.get("/monthly-plan/:year", protect, restrictTo("admin", "lead-guide"), getMonthlyPlan);
 tourRouter.get("/:id", getTour);
 tourRouter.post("/", checkBody, protect, restrictTo("admin", "lead-guide"), createTour);
-tourRouter.patch("/:id", checkBody, protect, restrictTo("admin", "lead-guide"), updateTour);
+tourRouter.patch("/:id", checkBody, protect, restrictTo("admin", "lead-guide"), uploadTourImages, resizeTourImages, updateTour);
 tourRouter.delete("/:id", protect, restrictTo("admin"), deleteTour);
 
 export default tourRouter;

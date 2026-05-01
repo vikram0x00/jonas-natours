@@ -1,6 +1,7 @@
 // Change User Details
 const nameField = document.getElementById("name");
 const emailField = document.getElementById("email");
+const photoField = document.getElementById("profile");
 const saveUserBtn = document.getElementById("save");
 
 // Change Password
@@ -16,12 +17,31 @@ const PASSWORD_API_URL = "http://localhost:3000/api/v1/users/updatePassword";
 // triggerNotification already declared at logout.js
 
 // Change User Details
-saveUserBtn.addEventListener("click", async ()=>{
-	if(nameField.getAttribute("data-prefill") === nameField.value && emailField.getAttribute("data-prefill") === emailField.value){
+saveUserBtn.addEventListener("click", async (e)=>{
+	if(nameField.getAttribute("data-prefill") === nameField.value && emailField.getAttribute("data-prefill") === emailField.value && photoField.files.length === 0){
 		triggerNotification("No Details Changed!");
 		return;
 	}
+	else if(photoField.files.length !== 0){
+		saveUserBtn.innerText = "UPDATING...";
+		try {
+			const form = new FormData();
+			form.append("photo", photoField.files[0]);
+			const response = await fetch(UPDATE_API_URL, {
+				method: "PATCH",
+				body: form
+			});
+			if((await response).status === 201) triggerNotification("Details Updated Successfully");
+			else triggerNotification("Error. Something unexpected happened!");
+			location.assign("/me");
+		} catch (error) {
+			triggerNotification(error.message || "Something unexpected happened");
+			console.log(error);
+		}
+		saveUserBtn.innerText = "SAVE";
+	}
 	else{
+		saveUserBtn.innerText = "UPDATING...";
 		try {
 			const response = await fetch(UPDATE_API_URL, {
 				method: "PATCH",
@@ -40,6 +60,7 @@ saveUserBtn.addEventListener("click", async ()=>{
 			triggerNotification(error.message || "Something unexpected happened");
 			console.log(error);
 		}
+		saveUserBtn.innerText = "SAVE";
 	}
 });
 
