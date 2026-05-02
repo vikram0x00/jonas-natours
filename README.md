@@ -12,8 +12,8 @@ in React + TailwindCSS. Doing it all in Pug is a waste of time, Pug is not used 
 ✅ COMPLETED: 02/05/2026 23:52 IST
 
 ### Might implement these features in the future
-- Send Email on Password Changed (Forgot)
-- Send Email on Password Changed (Update)
+- Send Email on Password Changed
+- Send Email on Password Changed
 - Send Email on Details Changed
 - Send Email on Account Deactivated
 - Verify Sign Up via Email / One Time Password / One Time Cookie
