@@ -382,6 +382,19 @@ section.book a.button-lg{
 	cursor: pointer;
 }
 
+section.book button.button-lg{
+	background: #41ff80;
+    color: black;
+	border: none;
+    text-decoration: none;
+    text-align: center;
+    padding: 10px 40px;
+	font-family: "Geist";
+    border-radius: 10px;
+    font-size: 20px;
+	cursor: pointer;
+}
+
 .hidden {
 	display: none !important;
 }

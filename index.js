@@ -12,6 +12,7 @@ import helmet from "helmet";
 import hpp from "hpp";
 import viewRouter from "./routes/viewRoutes.js";
 import cookieParser from "cookie-parser";
+import bookingRouter from "./routes/bookingRoutes.js";
 
 // DONT USE THESE, INSTEAD USE TYPESCRIPT, ZOD, 2LVL VALIDATION AND ORM
 // import sanitize from "express-mongo-sanitize";
@@ -118,6 +119,7 @@ app.use("/", viewRouter);
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/reviews", reviewRouter);
+app.use("/api/v1/bookings", bookingRouter);
 
 // Refactored Routes
 

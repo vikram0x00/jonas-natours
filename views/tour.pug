@@ -4,6 +4,9 @@ extends base
 	//- script(src="/script.js" defer)
 
 block content
+	#notification.notification.hidden
+		i.bi.bi-info-circle
+		span This is a test notification
 	section.banner(style=`background-image: url(/img/${tour.imageCover})`)
 		h1= tour.name
 		p
@@ -64,7 +67,12 @@ block content
 						| #{review.rating}
 	section.book
 		h2 What are you waiting for? Book the Tour Now!
-		a.button-lg(href='#') BOOK NOW
+		if user
+			button.button-lg(id="bookTour" data-tourId=`${tour.id}`) BOOK NOW
+		else 
+			a.button-lg(href='/login') LOG IN
 
 	script(src="https://cdn.maptiler.com/maptiler-sdk-js/v4.0.1/maptiler-sdk.umd.min.js")
 	script(src="/script.js")
+	script(src="/logout.js")
+	script(src="/stripe.js")

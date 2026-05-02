@@ -8,8 +8,8 @@ block content
 		.acc-ctl.user-ctl
 			h4 Account Controls
 			a.sidebar-item(href='#') Settings
-			a.sidebar-item(href='#') My Bookings
-			a.sidebar-item(href='#') My Reviews
+			a.sidebar-item(href='/my-tours') My Bookings
+			a.sidebar-item(href='/my-reviews') My Reviews
 			a.sidebar-item(href='#') Billing Details
 		- if(user.role === "admin")
 			.acc-ctl.admin-ctl
