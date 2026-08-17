@@ -8,14 +8,14 @@ export default function Basic() {
   return (
     <section className="flex flex-col items-center gap-10 bg-muted py-20 md:min-h-screen">
       <img src={Logo} alt="Natours" />
-      <div className="flex w-full max-w-sm flex-col gap-6 rounded border bg-background p-6">
+      <div className="flex w-full max-w-sm flex-col gap-6 rounded-2xl border bg-background p-6">
         <div>
           <h1 className="text-xl font-bold tracking-tight">Sign In</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Enter your details below to login
           </p>
         </div>
-        <form className="grid gap-4">
+        <div className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -23,7 +23,7 @@ export default function Basic() {
               id="email"
               type="email"
               autoComplete="username"
-              placeholder="team@mynaui.com"
+              placeholder="example@natours.app"
             />
           </div>
           <div className="grid gap-2">
@@ -42,7 +42,7 @@ export default function Basic() {
           <Button variant="outline" className="w-full">
             Login with Google
           </Button>
-        </form>
+        </div>
         <div className="flex flex-col gap-4 text-sm">
           <p>
             Don't have an account?{" "}

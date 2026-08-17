@@ -8,7 +8,7 @@ export default function Basic() {
   return (
     <section className="flex flex-col items-center gap-14 bg-muted py-20 md:min-h-screen">
       <img src={Logo} alt="Natours" />
-      <div className="flex w-full max-w-sm flex-col gap-6 rounded border bg-background p-6">
+      <div className="flex w-full max-w-sm flex-col gap-6 rounded-2xl border bg-background p-6">
         <div>
           <h1 className="text-xl font-bold tracking-tight">Reset Password</h1>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -24,7 +24,7 @@ export default function Basic() {
               id="email"
               type="email"
               autoComplete="username"
-              placeholder="team@mynaui.com"
+              placeholder="example@natours.app"
             />
           </div>
           <Button type="submit" className="w-full">

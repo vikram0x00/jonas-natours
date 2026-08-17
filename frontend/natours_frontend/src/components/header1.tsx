@@ -31,10 +31,10 @@ export default function Basic() {
               Blog
             </Link>
             <Link
-              to="#"
+              to="/tours"
               className={buttonVariants({ variant: "ghost" })}
             >
-              Company
+              Tours
             </Link>
             <p
               aria-hidden="true"

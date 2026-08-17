@@ -6,9 +6,9 @@ import { Link } from "react-router";
 
 export default function Basic() {
   return (
-    <section className="flex flex-col items-center justify-center gap-10 bg-muted py-10 md:min-h-screen">
+    <section className="flex flex-col items-center justify-center gap-10 bg-muted py-5 md:min-h-screen">
       <img src={Logo} alt="Natours" />
-      <div className="flex w-full max-w-sm flex-col gap-6 rounded border bg-background p-6">
+      <div className="flex w-full max-w-sm flex-col gap-6 rounded-2xl border bg-background p-6">
         <div>
           <h1 className="text-xl font-bold tracking-tight">
             Create an account
@@ -17,7 +17,7 @@ export default function Basic() {
             Get started with Natours today.
           </p>
         </div>
-        <form className="grid gap-4">
+        <div className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -25,7 +25,7 @@ export default function Basic() {
               id="email"
               type="email"
               autoComplete="username"
-              placeholder="team@mynaui.com"
+              placeholder="example@natours.app"
             />
           </div>
           <div className="grid gap-2">
@@ -41,20 +41,10 @@ export default function Basic() {
               Must be at least 6 characters long.
             </p>
           </div>
-          <div className="grid gap-2">
-            <Label htmlFor="confirm-password">Confirm Password</Label>
-            <Input
-              required
-              id="confirm-password"
-              type="password"
-              placeholder="••••••••••"
-              autoComplete="current-password"
-            />
-          </div>
           <Button type="submit" className="w-full">
             Create Account →
           </Button>
-        </form>
+        </div>
         <p className="text-sm">
           Already have an account?{" "}
           <Link to="/sign-in" className="underline">
