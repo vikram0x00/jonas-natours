@@ -4,7 +4,8 @@ import { useState } from "react";
 type User = {
 	userId: string,
 	name: string,
-	email: string
+	email: string,
+	loggedIn: boolean
 }
 
 const AuthState = (props: any)=>{

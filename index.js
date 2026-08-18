@@ -13,6 +13,7 @@ import hpp from "hpp";
 import viewRouter from "./routes/viewRoutes.js";
 import cookieParser from "cookie-parser";
 import bookingRouter from "./routes/bookingRoutes.js";
+import cors from "cors";
 
 // DONT USE THESE, INSTEAD USE TYPESCRIPT, ZOD, 2LVL VALIDATION AND ORM
 // import sanitize from "express-mongo-sanitize";
@@ -57,6 +58,9 @@ app.use(helmet({ contentSecurityPolicy: false }));
 
 // Prevent XSS Attacks and Convert HTML to Entities in Input Fields
 // app.use(xss);
+
+// Allow API Requests from Frontend
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
 // Prevent Parameter pollution
 // Express evaluates multiple values for the same query as an array and req.query.field = [...values]

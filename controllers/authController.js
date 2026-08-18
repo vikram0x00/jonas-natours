@@ -17,11 +17,13 @@ const signJWTToken = (id) =>{
 }
 
 export const signUp = async (req, res, next)=>{
-	const { name, password, email, role } = req.body;
+	const { name, password, email } = req.body;
 	const hashedPass = await bcrypt.hash(password, 10);
-	const newUser = await Users.create({ name, email, password: hashedPass, role });
+	const newUser = await Users.create({ name, email, password: hashedPass, role: "user" });
 	const token = signJWTToken(newUser._id);
-
+	res.cookie("jwt", token, {
+		expiresIn: Date.now() + 2592000000
+	});
 	res.status(201).json({
 		status: "success",
 		token,
@@ -36,7 +38,7 @@ export const login = async (req, res, next)=>{
 		return next(new AppError("Invalid Email or Password Sent", 400));
 	}
 	// Check if a valid user with that email exists
-	const user = await Users.findOne({ email }).select("password");
+	const user = await Users.findOne({ email });
 	if(!user){
 		return next(new AppError("No account found with that email", 404));
 	}
@@ -59,7 +61,11 @@ export const login = async (req, res, next)=>{
 	res.status(200).json({
 		status: "success",
 		token,
-		data: { user: user.id }
+		data: {
+			name: user.name,
+			id: user.id,
+			email: user.email
+		}
 	});
 }
 
