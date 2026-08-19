@@ -16,7 +16,22 @@ type Tours = {
 const TourState = (props: any)=>{
 	const [tours, setTours] = useState<Tours>([]);
 
-	return <TourContext.Provider value={{ tours, setTours }}>
+	const loadTours = async (url: string)=>{
+		const response = await fetch(url, {
+			method: "GET",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json"
+			}
+		});
+		const json = await response.json();
+		if(json.status === "success"){
+			setTours(json.data.json);
+			console.log(json.data.json);
+		}
+	}
+
+	return <TourContext.Provider value={{ tours, setTours, loadTours }}>
 		{props.children}
 	</TourContext.Provider>
 }

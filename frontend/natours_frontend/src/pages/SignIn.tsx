@@ -45,23 +45,29 @@ const SignIn = () => {
 			showAlert({ message: "Please fill in all the necessary details", type: "destructive" });
 			return;
 		}
-		const response = await fetch(import.meta.env.VITE_LOGIN_URL, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify({
-				email: details.email,
-				password: details.password
-			})
-		});
-		const json = await response.json();
-		if(json.status === "success"){
-			showAlert({ message: "Registration Successful", type: "default" });
-			setUser({ loggedIn: true, name: json.data.name, email: json.data.email, id: json.data.id });
-			setTimeout(()=>{
-				redirect("/tours");
-			}, 2000);
+		try{
+			const response = await fetch(import.meta.env.VITE_LOGIN_URL, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					email: details.email,
+					password: details.password
+				}),
+				credentials: "include"
+			});
+			const json = await response.json();
+			if (json.status === "success") {
+				showAlert({ message: "Sign In Successful", type: "default" });
+				setUser({ loggedIn: true, name: json.data.name, email: json.data.email, id: json.data.id });
+				setTimeout(() => {
+					redirect("/tours");
+				}, 2000);
+			}
+		}
+		catch(error: any){
+			showAlert({ message: "An Unexpected Error Occurred: " + error.message, type: "destructive" });
 		}
 	}
 

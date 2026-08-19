@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { getAllUsers, getUser, createUser, updateUser, deleteUser, updateMe, getMe, deleteMe, updateUserPhoto, resizeUserPhoto } from "../controllers/userController.js";
-import { signUp, login, forgotPassword, resetPassword, updatePassword, protect, restrictTo, logout } from "../controllers/authController.js";
+import { signUp, login, forgotPassword, resetPassword, updatePassword, protect, restrictTo, logout, getUserFromToken } from "../controllers/authController.js";
 
 const userRouter = Router();
 
+userRouter.get("/get-user", getUserFromToken);
 userRouter.post("/signup", signUp);
 userRouter.post("/login", login);
 userRouter.get("/logout", logout);

@@ -57,7 +57,6 @@ export const login = async (req, res, next)=>{
 	res.cookie("jwt", token, {
 		expiresIn: Date.now() + 2592000000
 	});
-	delete user.password;
 	res.status(200).json({
 		status: "success",
 		token,
@@ -80,6 +79,37 @@ export const logout = async (req, res)=>{
 	res.status(200).json({
 		status: "success",
 		message: "Logged Out Successfully"
+	});
+}
+
+export const getUserFromToken = async (req, res, next)=>{
+	// (1) Getting Token
+	let token;
+	if(req.headers.authorization && req.headers.authorization.startsWith("Bearer")){
+		token = req.headers.authorization.split(" ")[1];
+	}
+	else if(req.cookies.jwt){
+		token = req.cookies.jwt;
+	}
+	if(!token){
+		return next(new AppError("Unauthorized. Please Log In", 401));
+	}
+	// (2) Verifying Token
+	const data = jwt.verify(token, process.env.JWT_SECRET);
+	// (3) Check if user exists in DB
+	const user = await Users.findById(data.id);
+	if(!user){
+		return next(new AppError("Invalid Request", 401));
+	}
+	// If all the above challenges pass, the route will allow the access to the protected route
+	res.status(200).json({
+		status: "success",
+		data: {
+			id: user.id,
+			name: user.name,
+			email: user.email,
+			photo: user.photo
+		}
 	});
 }
 

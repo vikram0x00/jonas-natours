@@ -45,23 +45,29 @@ const Register = () => {
 			showAlert({ message: "Please fill in all the necessary details", type: "destructive" });
 			return;
 		}
-		const response = await fetch(import.meta.env.VITE_SIGNUP_URL, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify({
-				name: details.name,
-				email: details.email,
-				password: details.password
-			})
-		});
-		const json = await response.json();
-		if(json.status === "success"){
-			showAlert({ message: "Registration Successful", type: "default" });
-			setTimeout(()=>{
-				redirect("/sign-in");
-			}, 2000);
+		try{
+			const response = await fetch(import.meta.env.VITE_SIGNUP_URL, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					name: details.name,
+					email: details.email,
+					password: details.password
+				}),
+				credentials: "include"
+			});
+			const json = await response.json();
+			if(json.status === "success"){
+				showAlert({ message: "Registration Successful", type: "default" });
+				setTimeout(()=>{
+					redirect("/sign-in");
+				}, 2000);
+			}
+		}
+		catch(error: any){
+			showAlert({ message: "An Unexpected Error Occurred: " + error.message, type: "destructive" });
 		}
 	}
 

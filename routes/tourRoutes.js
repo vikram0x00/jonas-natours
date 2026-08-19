@@ -19,7 +19,7 @@ tourRouter.use("/:id/reviews", reviewRouter);
 tourRouter.get("/tours-within/:distance/center/:latlng/unit/:unit", getToursWithin);
 tourRouter.get("/distances/:latlng/unit/:unit", getDistances);
 
-tourRouter.get("/", protect, restrictTo("admin", "lead-guide"), getAllTours);
+tourRouter.get("/", protect, getAllTours);
 tourRouter.get("/top-5-tours", aliasTopTours);
 tourRouter.get("/tour-stats", getTourStats);
 tourRouter.get("/monthly-plan/:year", protect, restrictTo("admin", "lead-guide"), getMonthlyPlan);
