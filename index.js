@@ -54,7 +54,11 @@ app.set("views", "./views");
 
 // Set Security Headers automatically with Helmet Middleware
 // Use it just above the middleware stack so that it sets the headers properly
-app.use(helmet({ contentSecurityPolicy: false }));
+app.use(helmet({ 
+	contentSecurityPolicy: false,
+	crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: false
+ }));
 
 // Prevent XSS Attacks and Convert HTML to Entities in Input Fields
 // app.use(xss);

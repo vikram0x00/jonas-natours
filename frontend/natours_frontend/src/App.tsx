@@ -4,6 +4,7 @@ import SignIn from "./pages/SignIn";
 import NotFound from "@/components/4041";
 import ForgotPassword from "./pages/ForgotPassword";
 import Tours from "@/pages/Tours";
+import Tour from "@/pages/Tour";
 
 import { Routes, Route } from "react-router";
 
@@ -15,8 +16,9 @@ export function App() {
 			<Route path="/tours" element={<Tours/>} />
 			<Route path="/register" element={<Register/>} />
 			<Route path="/forgot-password" element={<ForgotPassword/>} />
+			<Route path="/tour/:slug" element={<Tour/>} />
 			<Route path="/sign-in" element={<SignIn/>} />
-			<Route path="*" element={<NotFound/>} />
+			<Route path="*" element={<NotFound type="Page"/>} />
 			<Route/>
 		</Routes>
 	</>

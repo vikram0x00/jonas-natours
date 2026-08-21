@@ -40,7 +40,7 @@ export default function Basic({ name, slug, maxGroupSize, ratingsAverage, rating
 				<div className="flex items-center mx-0.5 my-0.5 text-sm"><Star className="mr-1" size={16}/>{ratingsAverage} ({ratingsQuantity})</div>
 				<div className="flex items-center mx-0.5 my-0.5 text-sm"><Tag className="mr-1" size={16}/>${price}*</div>
 			</div>
-			<Link to={"/" + slug} className={buttonVariants({ variant: "default", className: "mx-2 mb-2" })}>Details</Link>
+			<Link to={"/tour/" + slug} className={buttonVariants({ variant: "default", className: "mx-2 mb-2" })}>Details</Link>
 		</div>
 	);
 }

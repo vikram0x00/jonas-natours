@@ -1,12 +1,30 @@
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Menu } from "@mynaui/icons-react";
 import Logo from "@/components/ui/logo.png";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import AuthContext from "@/context/AuthContext";
 import { useContext } from "react";
+import TourContext from "@/context/TourContext";
 
 export default function Basic() {
-	const { user } = useContext(AuthContext);
+	const { user, setUser } = useContext(AuthContext);
+	const { setTours } = useContext(TourContext);
+	const redirect = useNavigate();
+
+	const handleLogout = async ()=>{
+		try {
+			const response = await fetch(import.meta.env.VITE_LOGOUT, {
+				credentials: "include"
+			});
+			await response.json();
+			setUser(null);
+			setTours(null);
+			redirect("/");
+		} catch (error: any) {
+			console.log(error.message);
+		}
+	}
+
 	return (
 		<header className="w-full border-b bg-background">
 			<div className="mx-auto flex max-w-7xl items-center justify-between p-4">
@@ -58,8 +76,9 @@ export default function Basic() {
 					</Link>
 					</>}
 					{user && <>
-						<Button className={buttonVariants({ variant: "outline" })}>{user.name || "User"}</Button>
-						<Button className={buttonVariants({ variant: "default" })}>Log Out</Button>
+						<Link to="/tours" className={buttonVariants({ variant: "ghost" })}>Tours</Link>
+						<Link to="/profile" className={buttonVariants({ variant: "outline" })}>{user.name || "User"}</Link>
+						<Button onClick={handleLogout} className={buttonVariants({ variant: "default" })}>Log Out</Button>
 					</>}
 					<button className="inline-flex p-1.5 md:hidden">
 						<Menu />

@@ -9,6 +9,8 @@ This is a code-along repository of [Jonas Schmedtmann](https://jonas.io/) - Comp
 I have not written all the features as stated in the 217. Final Considerations but, I am planning to build the frontend 
 in React + TailwindCSS. Doing it all in Pug is a waste of time, Pug is not used anymore and it is not the standard for building websites in 2026
 
+Update: I have built a Frontend in React + ShadCN UI and it is in the `frontend/natours_frontend` folder
+
 ✅ COMPLETED: 02/05/2026 23:52 IST
 
 ### Might implement these features in the future

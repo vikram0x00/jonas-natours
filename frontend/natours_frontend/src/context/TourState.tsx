@@ -2,6 +2,7 @@ import { useState } from "react";
 import TourContext from "./TourContext";
 
 type Tours = {
+	id: string
 	name: string
 	duration: number
 	maxGroupSize: number
@@ -11,6 +12,7 @@ type Tours = {
 	summary: string
 	imageCover: string
 	locations: number
+	slug: string
 }[];
 
 const TourState = (props: any)=>{
@@ -27,7 +29,6 @@ const TourState = (props: any)=>{
 		const json = await response.json();
 		if(json.status === "success"){
 			setTours(json.data.json);
-			console.log(json.data.json);
 		}
 	}
 

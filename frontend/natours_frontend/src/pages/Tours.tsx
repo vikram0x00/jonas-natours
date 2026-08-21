@@ -29,7 +29,7 @@ const Tours = ()=>{
 
 	useEffect(()=>{
 		const authToken = document.cookie.split(";").find(e => e.includes("jwt="));
-		const nullToken = authToken?.split("=")[1] === "NULL_TOKEN";
+		const nullToken = authToken?.split("=")[1] === "";
 		if(!authToken || nullToken) redirect("/sign-in");
 		else getUserFromToken(import.meta.env.VITE_GET_USER);
 	}, []);
